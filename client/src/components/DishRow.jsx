@@ -31,10 +31,10 @@ const DishRow = () => {
 
   const renderSection = (title, dishes, ref, isTrending = false, seeAll, setSeeAll) => (
     <div className="relative px-8 md:px-52 font-Poppins py-8">
-      <h2 className="text-[#181211] text-4xl flex justify-between font-bold leading-tight tracking-[-0.015em] pb-3 pt-5">
+      <h2 className="text-[#181211] text-3xl flex justify-between font-semibold leading-tight tracking-[-0.015em] pb-3 pt-5">
         {title}
         <div 
-          className='text-lg font-medium flex items-center gap-2 text-orange-500 cursor-pointer'
+          className=' font-medium text-base flex items-center gap-2 text-orange-500 cursor-pointer'
           onClick={() => setSeeAll(!seeAll)}
         >
           {seeAll ? 'Show Less' : 'See All'} <GoArrowRight />
@@ -45,7 +45,7 @@ const DishRow = () => {
         {!seeAll && (
           <>
             <button
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow-md"
+              className="absolute left-0 top-[43%] transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow-md"
               onClick={() => scroll('left', ref)}
             >
               <FiChevronLeft size={24} />
@@ -54,7 +54,7 @@ const DishRow = () => {
         )}
         
         <div
-          className={`${seeAll ? 'flex flex-col sm:flex-row sm:flex-wrap justify-center sm:justify-start' : 'flex overflow-x-auto scrollbar-hide'} flex gap-6 py-4`}
+          className={`${seeAll ? 'flex flex-col sm:flex-row sm:flex-wrap justify-center sm:justify-start' : 'flex overflow-x-auto scrollbar-hide'} flex gap-4 py-4`}
           ref={ref}
           style={seeAll ? {} : {
             scrollbarWidth: 'none',
@@ -63,17 +63,17 @@ const DishRow = () => {
           }}
         >
           {dishes.map((dish) => (
-            <div key={dish.name} className={`flex-shrink-0 ${isTrending ? 'w-[220px]' : 'w-[350px]'} ${isTrending&&seeAll ? 'w-[200px]' : ''}`}>
+            <div key={dish.name} className={`flex-shrink-0 ${isTrending ? 'w-[190px]' : 'w-[230px]'} ${isTrending&&seeAll ? 'w-[200px]' : ''}`}>
               <div
-                className={`${isTrending ? 'w-[220px] h-[220px]' : 'w-full aspect-square'} bg-center bg-no-repeat bg-cover ${isTrending ? 'rounded-full' : 'rounded-xl'}`}
+                className={`${isTrending ? 'w-[180px] h-[180px]' : 'w-full aspect-square'} bg-center bg-no-repeat bg-cover ${isTrending ? 'rounded-full' : 'rounded-xl'}`}
                 style={{ backgroundImage: `url(${dish.image})` }}
               ></div>
               <div className="mt-2">
-                <p className={`text-[#181211]  ${isTrending ? 'text-center text-2xl' : 'text-xl'} font-medium leading-normal`}>
+                <p className={`text-[#181211]  ${isTrending ? 'text-center ' : ''} font-medium leading-normal`}>
                   {dish.name}
                 </p>
                 {!isTrending && (
-                  <p className="text-[#8a6960] text-lg font-normal leading-normal">
+                  <p className="text-[#8a6960]  font-normal leading-normal">
                     {dish.price}
                   </p>
                 )}

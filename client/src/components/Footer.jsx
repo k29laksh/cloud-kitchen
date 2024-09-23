@@ -4,10 +4,10 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="text-lg bg-zinc-900 text-white py-8 mx-24 rounded-t-3xl">
-      <div className="container mx-auto flex justify-between items-center">
+    <footer className="text-sm bg-zinc-900 text-white py-5 mx-24 rounded-t-3xl">
+      <div className="container mx-auto px-12 flex justify-between items-center">
         <div className="flex items-center gap-3 text-white-100">
-          <div className="size-8">
+          <div className="size-6">
             <svg
               viewBox="0 0 48 48"
               fill="none"
@@ -21,7 +21,7 @@ const Footer = () => {
               ></path>
             </svg>
           </div>
-          <h2 className="text-gray-100 text-3xl  font-semibold leading-tight ">
+          <h2 className="text-gray-100 text-2xl  font-semibold leading-tight ">
             Kitchen<span className="text-orange-500">Conn</span>
           </h2>
         </div>{" "}
@@ -32,7 +32,7 @@ const Footer = () => {
           </a>
           | All Rights Reserved
         </span>
-        <div className="flex space-x-6">
+        <div className="flex space-x-4">
           <FaFacebookF size={30} />
           <FaTwitter size={30} />
           <FaInstagram size={30} />
