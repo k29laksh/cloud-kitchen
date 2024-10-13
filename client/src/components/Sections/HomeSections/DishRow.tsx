@@ -1,20 +1,29 @@
+"use client";
 import React, { useRef, useState } from "react";
+import Image from "next/image";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { trendingDishes, newKitchens, MoreDishes } from "../data/dishes";
 import { GoArrowRight } from "react-icons/go";
-import rating_icon from "../assets/icons/rating_icon.png"
-const DishRow = () => {
-  const trendingRef = useRef(null);
-  const newKitchensRef = useRef(null);
-  const moreDishesRef = useRef(null);
+import { trendingDishes, newKitchens, MoreDishes } from "@/data/dishes";
 
-  // State to manage whether "See All" is active for each section
+interface Dish {
+  name: string;
+  image: string;
+  veg?: boolean;
+  price?: string;
+  rating?: number;
+}
+
+const DishRow: React.FC = () => {
+  const trendingRef = useRef<HTMLDivElement>(null);
+  const newKitchensRef = useRef<HTMLDivElement>(null);
+  const moreDishesRef = useRef<HTMLDivElement>(null);
+
   const [seeAllTrending, setSeeAllTrending] = useState(false);
   const [seeAllNewKitchens, setSeeAllNewKitchens] = useState(false);
   const [seeAllMoreDishes, setSeeAllMoreDishes] = useState(false);
 
-  const scroll = (direction, ref) => {
-    const scrollAmount = 400; // Adjust this value to control scroll distance
+  const scroll = (direction: "left" | "right", ref: React.RefObject<HTMLDivElement>) => {
+    const scrollAmount = 400;
     if (ref.current) {
       const newScrollPosition =
         direction === "left"
@@ -27,24 +36,20 @@ const DishRow = () => {
       });
     }
   };
-  const truncateTitle = (title) => {
-    const words = title.split(" ");
-    return words.length > 10 ? words.slice(0, 10).join(" ") + "..." : title;
-  };
 
   const renderSection = (
-    title,
-    dishes,
-    ref,
-    isTrending = false,
-    seeAll,
-    setSeeAll
+    title: string,
+    dishes: Dish[],
+    ref: React.RefObject<HTMLDivElement>,
+    isTrending: boolean = false,
+    seeAll: boolean,
+    setSeeAll: React.Dispatch<React.SetStateAction<boolean>>
   ) => (
-    <div className="relative px-8 md:px-52 font-Poppins py-8">
-      <h2 className="text-[#181211] text-3xl flex justify-between font-semibold leading-tight tracking-[-0.015em] pb-3 pt-5">
+    <div className="relative px-4 md:px-52 font-Poppins py-8">
+      <h2 className="text-[#181211] text-xl md:text-3xl flex justify-between font-semibold leading-tight tracking-[-0.015em] pb-3 pt-5">
         {title}
         <div
-          className=" font-medium text-base flex items-center gap-2 text-orange-500 cursor-pointer"
+          className="font-medium text-sm md:text-base flex items-center gap-2 text-orange-500 cursor-pointer"
           onClick={() => setSeeAll(!seeAll)}
         >
           {seeAll ? "Show Less" : "See All"} <GoArrowRight />
@@ -55,7 +60,7 @@ const DishRow = () => {
         {!seeAll && (
           <>
             <button
-              className="absolute left-0 top-[40%] transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow-md"
+              className="absolute left-0 top-[40%] transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow-md hidden md:block"
               onClick={() => scroll("left", ref)}
             >
               <FiChevronLeft size={24} />
@@ -66,9 +71,9 @@ const DishRow = () => {
         <div
           className={`${
             seeAll
-              ? "flex flex-col sm:flex-row sm:flex-wrap justify-center sm:justify-start"
+              ? "flex flex-wrap  sm:justify-start"
               : "flex overflow-x-auto scrollbar-hide"
-          } flex gap-7 py-4`}
+          } flex gap-5 md:gap-7 py-4`}
           ref={ref}
           style={
             seeAll
@@ -84,12 +89,12 @@ const DishRow = () => {
             <div
               key={dish.name}
               className={`flex-shrink-0 ${
-                isTrending ? "w-[170px]" : "w-[250px]"
-              } ${isTrending && seeAll ? "w-[200px]" : ""}`}
+                isTrending ? "w-[150px] md:w-[170px]" : "w-[200px] md:w-[250px]"
+              } ${isTrending && seeAll ? "w-[180px] md:w-[200px]" : ""}`}
             >
               <div
                 className={`${
-                  isTrending ? "w-[180px] h-[180px]" : "w-full aspect-square"
+                  isTrending ? "w-[150px] h-[150px] md:w-[180px] md:h-[180px]" : "w-full aspect-square"
                 } bg-center bg-no-repeat bg-cover ${
                   isTrending ? "rounded-full" : "rounded-xl"
                 }`}
@@ -98,21 +103,25 @@ const DishRow = () => {
               <div className={`mt-2`}>
                 <div
                   className={`${
-                    isTrending ? "" : "flex items-start space-x-1 "
+                    isTrending ? "" : "flex items-start space-x-1"
                   }`}
                 >
                   {!isTrending ? (
                     dish?.veg ? (
-                      <img
+                      <Image
                         className="w-4 h-4 mt-1"
                         src="/veg_icon.png"
                         alt="veg"
+                        width={16}
+                        height={16}
                       />
                     ) : (
-                      <img
+                      <Image
                         className="w-4 h-4 mt-1"
                         src="/nonveg_icon.png"
                         alt="non-veg"
+                        width={16}
+                        height={16}
                       />
                     )
                   ) : (
@@ -120,8 +129,8 @@ const DishRow = () => {
                   )}
                   <p
                     className={`text-gray-800  ${
-                      isTrending ? "text-center " : ""
-                    } font-medium leading-normal`}
+                      isTrending ? "text-center" : ""
+                    } font-medium leading-normal text-sm md:text-base`}
                     style={{
                       display: "-webkit-box",
                       WebkitLineClamp: 2,
@@ -136,14 +145,14 @@ const DishRow = () => {
                 </div>
                 <div className="flex justify-between items-center py-2">
                   {!isTrending && (
-                    <p className="text-[#8a6960] font-normal leading-normal">
+                    <p className="text-[#8a6960] font-normal text-sm md:text-base leading-normal">
                       {dish.price}
                     </p>
                   )}
-                  {!isTrending && (
+                  {!isTrending && dish.rating && (
                     <div className="flex items-center text-sm text-gray-700">
-                      <img className="h-4 w-4" src={rating_icon} alt= "" />
-                      {dish?.rating}
+                      <Image className="h-4 w-4" src="/rating_icon.png" alt="" width={16} height={16} />
+                      {dish.rating}
                     </div>
                   )}
                 </div>
@@ -155,7 +164,7 @@ const DishRow = () => {
         {!seeAll && (
           <>
             <button
-              className="absolute right-0 top-[40%] transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow-md"
+              className="absolute right-0 top-[40%] transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow-md hidden md:block"
               onClick={() => scroll("right", ref)}
             >
               <FiChevronRight size={24} />

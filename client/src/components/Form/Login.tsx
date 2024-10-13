@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+"use client"
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { FcGoogle } from "react-icons/fc";
 
-const Login = ({ toggleFormType, formType }) => {
-  const [formData, setFormData] = useState({
+interface LoginProps {
+  toggleFormType: () => void;
+  formType: 'login' | 'signup';
+}
+
+interface FormData {
+  email: string;
+  password: string;
+}
+
+const Login: React.FC<LoginProps> = ({ toggleFormType, formType }) => {
+  const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -15,7 +26,7 @@ const Login = ({ toggleFormType, formType }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     // Handle form submission logic
     console.log('Form data submitted:', formData);
@@ -23,7 +34,7 @@ const Login = ({ toggleFormType, formType }) => {
 
   return (
     <div className="flex items-center font-Poppins justify-center bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-4 rounded w-[400px]">
+      <form onSubmit={handleSubmit} className="bg-white p-4 rounded w-[340px]">
         <h2 className="text-3xl font-semibold text-center text-gray-800 m-2">
           {formType === 'login' ? 'Log In' : 'Sign Up'}
         </h2>
@@ -37,7 +48,7 @@ const Login = ({ toggleFormType, formType }) => {
               value={formData.email}
               onChange={handleChange}
               placeholder='Email'
-              className="mt-1 block w-full px-3 py-3 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-zinc-800 sm:"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-zinc-800"
             />
           </div>
           <div className="mb-4">
@@ -49,12 +60,12 @@ const Login = ({ toggleFormType, formType }) => {
               value={formData.password}
               onChange={handleChange}
               placeholder='Password'
-              className="mt-1 block w-full px-3 py-3 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-zinc-800 sm:"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-zinc-800"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600  my-6"
+            className="w-full bg-orange-500 font-sm text-white py-2 px-4 rounded-md hover:bg-orange-600  my-3"
           >
             {formType === 'login' ? 'Log In' : 'Sign Up'}
           </button>
@@ -67,9 +78,9 @@ const Login = ({ toggleFormType, formType }) => {
 
           <button
             type="button"
-            className="w-full bg-zinc-800 text-white py-2 px-4 rounded-md hover:bg-zinc-900  my-6 flex items-center gap-2 justify-center"
+            className="w-full bg-zinc-800 text-white text-sm py-2 px-4 rounded-md hover:bg-zinc-900  my-4 flex items-center gap-2 justify-center"
           >
-            <FcGoogle size={26} />
+            <FcGoogle size={24} />
             {formType === 'login' ? 'Log In' : 'Sign Up'} with Google
           </button>
 
