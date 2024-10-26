@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from 'sonner';
+import ReduxProvider from "./redux-provider";
  
 
 import "./globals.css";
@@ -22,9 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} `}>
+      <ReduxProvider>
           <Header />
           <main className="">{children}</main>
           <Footer/>
+          </ReduxProvider>
           <Toaster />
       </body>
     </html>

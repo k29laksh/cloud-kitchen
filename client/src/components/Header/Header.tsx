@@ -52,6 +52,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@radix-ui/react-dropdown-menu";
+import Link from "next/link";
 
 // Define the User interface
 interface User {
@@ -103,7 +104,7 @@ const Header: React.FC = () => {
       <div className="font-Poppins sticky top-0 left-0 right-0 sm:mx-12 md:mx-20 lg:mx-24 sm:rounded-b-3xl bg-zinc-900/95 z-50">
         {/* Header Section */}
         <header className="text-gray-100 py-3 sm:py-4 lg:py-5 px-3 sm:px-6 md:px-8 lg:px-12 flex justify-between items-center rounded-b-3xl">
-          <div className="flex items-center gap-1 text-white-100">
+          <Link href={'/'} className="flex items-center gap-1 text-white-100">
             <div className="size-[20px] sm:size-5 lg:size-6">
               <svg
                 viewBox="0 0 48 48"
@@ -121,7 +122,7 @@ const Header: React.FC = () => {
             <h2 className="text-gray-100 text-xl  lg:text-2xl font-semibold leading-tight">
               Kitchen<span className="text-orange-500">Conn</span>
             </h2>
-          </div>
+          </Link>
           <nav className="space-x-6 text-sm flex items-center">
             <div className="space-x-6 hidden text-sm lg:flex items-center">
               <a href="#" className="hover:text-orange-500">
