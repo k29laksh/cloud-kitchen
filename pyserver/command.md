@@ -1,4 +1,5 @@
 pip freeze > requirements.txt
+venv/Scripts/activate 
 docker-compose up -d --build
 docker-compose down
 docker exec -it django /bin/sh
