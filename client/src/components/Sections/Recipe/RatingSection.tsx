@@ -1,26 +1,14 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import {
-  Clock,
-  ChefHat,
-  Share2,
-  ShoppingCart,
-  Heart,
-  ArrowLeft,
   Star,
   MessageCircle,
   ThumbsUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import Image from "next/image";
 
 // Recipe interface
@@ -78,73 +66,90 @@ interface Review {
 }
 
 
-const RatingSection = () =>
-    
-    {const recipe: Recipe = {
-        title: "Shrimp Stir-Fry with Brown Rice",
-        category: "Main dish",
-        calories: 350,
-        duration: 45,
-        difficulty: "Medium",
-        author: {
-          avatar: "/dp.webp",
-          name: "Alice Wood",
-          username: "alicewood",
-        },
-        description:
-          "A quick and healthy stir-fry featuring succulent shrimp sautéed to perfection, vibrant, crunchy vegetables, and a side of nutty brown rice. This dish is not only packed with...",
-        tags: [
-          "ComfortFood",
-          "HealthyEats",
-          "QuickRecipes",
-          "ShrimpLover",
-          "WholeGrainDelights",
-        ],
-        nutrients: {
-          carbs: 45,
-          protein: 8,
-          fats: 10,
-          fiber: 7,
-        },
-        ingredients: [
-          { name: "Shrimp", amount: "60g", icon: "🍤" },
-          { name: "Brown Rice", amount: "100g", icon: "🍚" },
-          { name: "Garlic", amount: "1/2 piece", icon: "🧄" },
-          { name: "Pea Pods", amount: "20g", icon: "🌱" },
-          { name: "Soy Sauce", amount: "10ml", icon: "🍶" },
-          { name: "Oil", amount: "1 tbsp", icon: "🛢️" },
-          { name: "Garlic", amount: "2 cloves", icon: "🧄" },
-        ],
-        rating: {
-          average: 4.7,
-          total: 128,
-          distribution: { 5: 85, 4: 28, 3: 10, 2: 3, 1: 2 },
-        },
-        reviews: [
-          {
-            id: 1,
-            user: { name: "Sarah Johnson", username: "sarahj", avatar: "/dp.webp" },
-            rating: 5,
-            date: "2 days ago",
-            comment: "Amazing recipe! Perfectly balanced flavors.",
-            likes: 24,
-            images: ["/recipe2.png"],
-          },
-          {
-            id: 2,
-            user: { name: "Mike Chen", username: "mikec", avatar: "/dp.webp" },
-            rating: 4,
-            date: "1 week ago",
-            comment: "Good recipe, perfect taste with some adjustments.",
-            likes: 16,
-          },
-        ],
-      }; 
-      
-      return (
+const RatingSection = () => {
+  const [showAll, setShowAll] = useState(false);
+
+  const recipe: Recipe = {
+    title: "Shrimp Stir-Fry with Brown Rice",
+    category: "Main dish",
+    calories: 350,
+    duration: 45,
+    difficulty: "Medium",
+    author: {
+      avatar: "/dp.webp",
+      name: "Alice Wood",
+      username: "alicewood",
+    },
+    description:
+      "A quick and healthy stir-fry featuring succulent shrimp sautéed to perfection, vibrant, crunchy vegetables, and a side of nutty brown rice. This dish is not only packed with...",
+    tags: [
+      "ComfortFood",
+      "HealthyEats",
+      "QuickRecipes",
+      "ShrimpLover",
+      "WholeGrainDelights",
+    ],
+    nutrients: {
+      carbs: 45,
+      protein: 8,
+      fats: 10,
+      fiber: 7,
+    },
+    ingredients: [
+      { name: "Shrimp", amount: "60g", icon: "🍤" },
+      { name: "Brown Rice", amount: "100g", icon: "🍚" },
+      { name: "Garlic", amount: "1/2 piece", icon: "🧄" },
+      { name: "Pea Pods", amount: "20g", icon: "🌱" },
+      { name: "Soy Sauce", amount: "10ml", icon: "🍶" },
+      { name: "Oil", amount: "1 tbsp", icon: "🛢️" },
+      { name: "Garlic", amount: "2 cloves", icon: "🧄" },
+    ],
+    rating: {
+      average: 4.7,
+      total: 128,
+      distribution: { 5: 85, 4: 28, 3: 10, 2: 3, 1: 2 },
+    },
+    reviews: [
+      {
+        id: 1,
+        user: { name: "Sarah Johnson", username: "sarahj", avatar: "/dp.webp" },
+        rating: 5,
+        date: "2 days ago",
+        comment: "Amazing recipe! Perfectly balanced flavors.",
+        likes: 24,
+        images: ["/recipe2.png"],
+      },
+      {
+        id: 2,
+        user: { name: "Mike Chen", username: "mikec", avatar: "/dp.webp" },
+        rating: 4,
+        date: "1 week ago",
+        comment: "Good recipe, perfect taste with some adjustments.",
+        likes: 16,
+      },
+      {
+        id: 3,
+        user: { name: "Emma Davis", username: "emmad", avatar: "/dp.webp" },
+        rating: 5,
+        date: "3 weeks ago",
+        comment: "Loved this! Quick and delicious meal for busy nights.",
+        likes: 42,
+      },
+      {
+        id: 4,
+        user: { name: "John Smith", username: "johns", avatar: "/dp.webp" },
+        rating: 3,
+        date: "1 month ago",
+        comment: "Nice but felt it was missing something.",
+        likes: 9,
+      },
+    ],
+  };
+
+  return (
     <div className="mb-8">
-      <CardContent className="py-6 px-0 sm:p-6">
-        <div className="flex flex-col md:flex-row md:flex-wrap gap-8">
+      <CardContent className="py-6 px-0">
+        <div className="flex flex-col px-0 sm:px-6 md:flex-row md:flex-wrap gap-8">
           <div className="flex-1">
             <h3 className="text-xl font-semibold mb-4">Rating & Reviews</h3>
             <div className="flex items-center gap-4 mb-6">
@@ -167,7 +172,6 @@ const RatingSection = () =>
                 </div>
               </div>
             </div>
-
             <div className="space-y-2">
               {Object.entries(recipe.rating.distribution)
                 .reverse()
@@ -196,16 +200,19 @@ const RatingSection = () =>
           </div>
         </div>
         <Separator className="my-6" />
-        <div className="space-y-6">
-          {recipe.reviews.map((review) => (
+
+        {/* Reviews Section */}
+        <div           className={`space-y-6 pr-2 sm:p-6 ${showAll ? "max-h-[500px] overflow-y-scroll" : ""}`}>
+          {(showAll ? recipe.reviews : recipe.reviews.slice(0, 2)).map((review) => (
             <div key={review.id} className="space-y-4">
               <div className="flex justify-between items-start">
                 <div className="flex gap-3">
                   <Avatar>
-                    <AvatarImage src={review.user.avatar} className="object-cover border border-gray-300 rounded-full " />
-                    <AvatarFallback>
-                      {review.user.name[0].toUpperCase()}
-                    </AvatarFallback>
+                    <AvatarImage
+                      src={review.user.avatar}
+                      className="object-cover border border-gray-300 rounded-full"
+                    />
+                    <AvatarFallback>{review.user.name[0].toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div>
                     <h4 className="font-medium text-sm sm:text-base">{review.user.name}</h4>
@@ -251,11 +258,18 @@ const RatingSection = () =>
             </div>
           ))}
         </div>
-        <Button variant="outline" className="w-full mt-6">
-          Show More Reviews
+
+        {/* Toggle Button */}
+        <Button
+          variant="outline"
+          className="w-full mt-6"
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll ? "See Less" : "Show All Reviews"}
         </Button>
       </CardContent>
     </div>
-  )}
+  );
+};
 
-  export default RatingSection
+export default RatingSection;

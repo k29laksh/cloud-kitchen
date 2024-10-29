@@ -298,7 +298,7 @@ const RecipePage = () => {
 
             {/* Nutrients */}
             <Card className="mb-6">
-              <CardContent className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+              <CardContent className="p-4 flex flex-wrap justify-between gap-4">
                 <div className="text-center">
                   <div className="text-lg font-medium">
                     {recipe.nutrients.carbs}g
