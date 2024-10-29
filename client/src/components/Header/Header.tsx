@@ -147,7 +147,8 @@ const Header: React.FC = () => {
               <Search size={20} />
             </a>
             <IoMdNotificationsOutline className="text-gray-100" size={22} />
-            <PiShoppingCartSimple className="text-gray-100" size={22} />
+            <Link href={"/cart"}>
+            <PiShoppingCartSimple className="text-gray-100" size={22} /></Link>
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger>

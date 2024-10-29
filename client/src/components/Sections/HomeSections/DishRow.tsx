@@ -4,6 +4,7 @@ import Image from "next/image";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { GoArrowRight } from "react-icons/go";
 import { trendingDishes, newKitchens, MoreDishes } from "@/data/dishes";
+import Link from "next/link";
 
 interface Dish {
   name: string;
@@ -92,14 +93,16 @@ const DishRow: React.FC = () => {
                 isTrending ? "w-[150px] md:w-[170px]" : "w-[200px] md:w-[250px]"
               } ${isTrending && seeAll ? "w-[180px] md:w-[200px]" : ""}`}
             >
-              <div
-                className={`${
+              <Link href={`/recipe/${dish?.name}`}
+                
+              >
+                <div className={`${
                   isTrending ? "w-[150px] h-[150px] md:w-[180px] md:h-[180px]" : "w-full aspect-square"
                 } bg-center bg-no-repeat bg-cover ${
                   isTrending ? "rounded-full" : "rounded-xl"
                 }`}
-                style={{ backgroundImage: `url(${dish.image})` }}
-              ></div>
+                style={{ backgroundImage: `url(${dish.image})` }}></div>
+              </Link>
               <div className={`mt-2`}>
                 <div
                   className={`${
