@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Poppins } from '@next/font/google';
 import { Toaster } from 'sonner';
 import ReduxProvider from "./redux-provider";
+
  
 
 import "./globals.css";

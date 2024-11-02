@@ -27,7 +27,7 @@ interface UpdateUserData {
 
 export const authApi = createApi({
   reducerPath: 'User',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/api/v1' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
 
   tagTypes: ['User'], 
 
@@ -35,7 +35,7 @@ export const authApi = createApi({
     // Login mutation
     login: builder.mutation<User, LoginData>({
       query: (data) => ({
-        url: `/auth/login`,
+        url: `/customerLogin`,
         method: 'POST',
         body: data,
       }),
@@ -44,7 +44,7 @@ export const authApi = createApi({
     // Register mutation
     register: builder.mutation<User, RegisterData>({
       query: (data) => ({
-        url: `/auth/signup`,
+        url: `customerRegister`,
         method: 'POST',
         body: data,
       }),

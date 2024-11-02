@@ -8,7 +8,7 @@ const CustomerSchema = new Schema({
     },
     phone: {
         type: Number,
-        required: true
+        // required: true
     },
     email: {
         type: String,
@@ -16,15 +16,15 @@ const CustomerSchema = new Schema({
     },
     city: {
         type: String,
-        required: true
+        // required: true
     },
     state: {
         type: String,
-        required: true
+        // required: true
     },
     pin: {
         type: Number,
-        required: true
+        // required: true
     },
     payments: [{
         type: Schema.Types.ObjectId,

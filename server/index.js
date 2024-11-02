@@ -8,13 +8,18 @@ const Kitchen = require('./models/Kitchen.js');
 const Customer = require("./models/Customer.js");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    credentials: true
+  }));
+  
 
 MONGO_URL = "mongodb://127.0.0.1:27017/kitchenConn";
 app.use(express.json());
-mongoose.connect(MONGO_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
+mongoose.connect(MONGO_URL)
     .then(() => console.log("MongoDB connected"))
     .catch((err) => console.log(err));
 
@@ -129,7 +134,7 @@ app.post("/createKitchen", authenticateJWT, async(req, res) => {
 
 // Post req route CustomerRegister
 app.post("/customerRegister", async(req, res) => {
-    const { name, phone, email, city, state, pin, password } = req.body;
+    const { name, email,password } = req.body;
 
     const customer = await Customer.findOne({ email: email });
 
@@ -141,10 +146,6 @@ app.post("/customerRegister", async(req, res) => {
     const newCustomer = new Customer({
         name,
         email,
-        phone,
-        city,
-        state,
-        pin,
         password: hashedPassword
     });
 
@@ -201,6 +202,6 @@ app.get("/", (req, res) => {
     res.send("Hii, login page");
 });
 
-app.listen(3000, () => {
+app.listen(8000, () => {
     console.log("App is listening to port 3000");
 });
