@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { RxCross2 } from "react-icons/rx";
 
 interface FilterModalProps {
@@ -9,22 +9,6 @@ interface FilterModalProps {
 
 const FilterModal: React.FC<FilterModalProps> = ({ isOpen, closeModal }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        closeModal();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen, closeModal]);
 
   if (!isOpen) return null;
 
@@ -49,7 +33,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, closeModal }) => {
           <div className="lg:w-1/2 border-b lg:border-b-0 lg:border-r p-4">
             <div className="pb-2">Filter By Food or Kitchens</div>
             <input
-              className="px-2 w-full outline-none py-3 border border-gray-400 rounded-lg"
+              className="px-2 w-full outline-none py-2 border border-gray-400 rounded sm:rounded-lg"
               type="search"
               placeholder="Search"
             />
