@@ -13,7 +13,6 @@ const homemakerSchema = new Schema({
     pin: { type: Number },
     phone: { type: Number },
     veg: { type: Boolean },
-    nonVeg: { type: Boolean },
     kitchenImage: { type: [String], default: [] },
     foodItems: [{ type: Schema.Types.ObjectId, ref: 'FoodItem' }], // Reference to FoodItems
     reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }], // Reference to all Reviews

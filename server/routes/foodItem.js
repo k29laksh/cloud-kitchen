@@ -44,6 +44,17 @@ router.post('/', authenticateHomemakerJWT, upload.array('foodImage', 10), async(
     }
 });
 
+// Route to get all food items from all homemakers
+// Public route to get all food items
+router.get('/all', async(req, res) => {
+    try {
+        const foodItems = await FoodItem.find().populate('homemaker'); // Optionally populate homemaker details
+        res.status(200).json(foodItems);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to retrieve food items' });
+    }
+});
 
 // Get a food item by ID
 router.get('/:foodItemId', authenticateHomemakerJWT, async(req, res) => {
