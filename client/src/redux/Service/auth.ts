@@ -27,7 +27,7 @@ interface UpdateUserData {
 
 export const authApi = createApi({
   reducerPath: 'User',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
 
   tagTypes: ['User'], 
 

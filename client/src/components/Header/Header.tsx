@@ -114,6 +114,9 @@ const Header: React.FC = () => {
               <Link href="/services" className="hover:text-orange-500 hidden  lg:block">
                 Services
               </Link>
+              <Link href="/community" className="hover:text-orange-500 hidden  lg:block">
+                Community
+              </Link>
             </div>
             <a href="#" className="hover:text-orange-500 hidden xl:block">
               Search
