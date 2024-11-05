@@ -1,4 +1,6 @@
+"use client"
 import React from "react";
+import { useRouter } from "next/navigation";
 import {
   Clock,
   ChefHat,
@@ -24,6 +26,7 @@ import {
 import Image from "next/image";
 import RatingSection from "@/components/Sections/Recipe/RatingSection";
 import Recommanded_dish1 from "@/components/Sections/Recipe/Recommanded_dish1";
+import Link from "next/link";
 
 // Recipe interface
 interface Recipe {
@@ -78,6 +81,7 @@ interface Review {
   images?: string[];
 }
 const RecipePage = () => {
+  const router = useRouter();
   const recipe: Recipe = {
     title: "Shrimp Stir-Fry with Brown Rice",
     category: "Main dish",
@@ -142,7 +146,11 @@ const RecipePage = () => {
   return (
     <div className="py-4 md:py-8 px-4 sm:px-24 md:px-12 lg:px-32 xl:px-52">
       {/* Header */}
-      <Button variant="ghost" className="mb-4 gap-2">
+      <Button
+        variant="ghost"
+        className="mb-4 gap-2"
+        onClick={() => router.back()}
+      >
         <ArrowLeft className="w-4 h-4 " />
         Back / {recipe.title}
       </Button>
@@ -151,46 +159,45 @@ const RecipePage = () => {
       <div className="flex flex-col md:flex-row justify-between gap-10">
         {/* Image Card */}
         <div className="md:w-1/2">
-        <Card className="mb-4 w-full md:mb-0">
-          <CardContent className="p-0 ">
-            <Image
-              src="/recipe2.png"
-              alt="Shrimp Stir-Fry"
-              className="w-full h-full md:h-[400px] object-cover rounded-lg"
-              width={500}
-              height={500}
-            />
-          </CardContent>
+          <Card className="mb-4 w-full md:mb-0">
+            <CardContent className="p-0 ">
+              <Image
+                src="/recipe2.png"
+                alt="Shrimp Stir-Fry"
+                className="w-full h-full md:h-[400px] object-cover rounded-lg"
+                width={500}
+                height={500}
+              />
+            </CardContent>
 
-          <div className="py-4 flex gap-3 flex-wrap">
-            <Image
-              src="/recipe2.png"
-              alt="Shrimp Stir-Fry"
-              className="w-24 h-24 object-cover rounded-lg"
-              width={500}
-              height={500}
-            />
-            <Image
-              src="/recipe2.png"
-              alt="Shrimp Stir-Fry"
-              className="w-24 h-24 object-cover rounded-lg"
-              width={500}
-              height={500}
-            />
-            <Image
-              src="/recipe2.png"
-              alt="Shrimp Stir-Fry"
-              className="w-24 h-24 object-cover rounded-lg"
-              width={500}
-              height={500}
-            />
-          </div>
+            <div className="py-4 flex gap-3 flex-wrap">
+              <Image
+                src="/recipe2.png"
+                alt="Shrimp Stir-Fry"
+                className="w-24 h-24 object-cover rounded-lg"
+                width={500}
+                height={500}
+              />
+              <Image
+                src="/recipe2.png"
+                alt="Shrimp Stir-Fry"
+                className="w-24 h-24 object-cover rounded-lg"
+                width={500}
+                height={500}
+              />
+              <Image
+                src="/recipe2.png"
+                alt="Shrimp Stir-Fry"
+                className="w-24 h-24 object-cover rounded-lg"
+                width={500}
+                height={500}
+              />
+            </div>
 
-<div className="hidden md:block">
-<RatingSection/>
-
-</div>
-        </Card>
+            <div className="hidden md:block">
+              <RatingSection />
+            </div>
+          </Card>
         </div>
 
         {/* Recipe Details Card */}
@@ -219,14 +226,12 @@ const RecipePage = () => {
                 </div>
               </div>
 
-              <Button>
-                Add to cart
-              </Button>
+              <Button>Add to cart</Button>
             </div>
 
             {/* Author */}
             <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
+              <Link href={'/chef/ramu'} className="flex items-center gap-2">
                 <Avatar>
                   <AvatarImage
                     className="object-cover"
@@ -237,29 +242,29 @@ const RecipePage = () => {
                   </AvatarFallback>
                 </Avatar>
                 <span className="font-medium">@{recipe.author.username}</span>
-              </div>
+              </Link>
               <div className="flex items-center gap-2">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="outline" size="icon">
-                          <Share2 className="w-4 h-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Share Recipe</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="outline" size="icon">
-                          <ShoppingCart className="w-4 h-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Add to Shopping List</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  <TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Share2 className="w-4 h-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Share Recipe</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <ShoppingCart className="w-4 h-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Add to Shopping List</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button variant="outline" size="icon">
@@ -269,7 +274,7 @@ const RecipePage = () => {
                     <TooltipContent>Save Recipe</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                </div>
+              </div>
             </div>
 
             <Separator className="my-4" />
@@ -348,17 +353,18 @@ const RecipePage = () => {
               ))}
             </div>
 
-           <Separator className="my-4" />
-           <div className="md:hidden ">
-<RatingSection/>
-
-</div>
+            <Separator className="my-4" />
+            <div className="md:hidden ">
+              <RatingSection />
+            </div>
             {/* Recommaded recipes */}
-           <Separator className="my-4" />
-           <div className="overflow-x-hidden">
-            <h1 className="text-xl font-semibold pb-2" >Explore Similar Recipes</h1>
-<Recommanded_dish1/>
-           </div>
+            <Separator className="my-4" />
+            <div className="overflow-x-hidden">
+              <h1 className="text-xl font-semibold pb-2">
+                Explore Similar Recipes
+              </h1>
+              <Recommanded_dish1 />
+            </div>
           </CardContent>
         </Card>
       </div>

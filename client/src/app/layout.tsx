@@ -7,8 +7,9 @@ import ReduxProvider from "./redux-provider";
  
 
 import "./globals.css";
-import Header from "@/components/Header/Header";
-import Footer from "@/components/Footer/Footer";
+
+import ConditionalFooter from "@/components/Footer/ConditionalFooter";
+import ConditionalHeader from "@/components/Header/ConditionalHeader";
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'], // Add weights as needed
@@ -30,9 +31,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} `}>
       <ReduxProvider>
-          <Header />
+          <ConditionalHeader />
           <main className="">{children}</main>
-          <Footer/>
+          <ConditionalFooter/>
           </ReduxProvider>
           <Toaster />
       </body>

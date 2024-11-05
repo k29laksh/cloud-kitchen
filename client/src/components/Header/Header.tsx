@@ -9,8 +9,10 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/redux/useDispatch";
 import {
   Sheet,
-  SheetTrigger,
+  SheetClose,
   SheetContent,
+  SheetFooter,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import {
   BadgePlus,
@@ -19,20 +21,18 @@ import {
   LogOut,
   User,
   Settings,
+  LifeBuoy,
+  TicketPercent,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuGroup } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { RootState } from "@/redux/store";
-import { toast } from "sonner";
 
-interface Customer {
+interface User {
   avatar: string;
   name: string;
   email: string;
-}
-
-interface User {
-  customer: Customer ;
 }
 
 const Header: React.FC = () => {
@@ -41,15 +41,14 @@ const Header: React.FC = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [formType, setFormType] = useState<"login" | "signup">("login");
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true); // Loading state
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
 
   useEffect(() => {
+    // Only set user state on client side
     const storedUserInfo = localStorage.getItem('userInfo');
     if (storedUserInfo) {
       setUser(JSON.parse(storedUserInfo));
     }
-    setLoading(false); // Set loading to false after checking local storage
   }, []);
 
   useEffect(() => {
@@ -65,9 +64,7 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    setUser(null);
-    toast.success(`Logged out successfully!`);
-
+    setUser(null); // Reset user state on logout
   };
 
   const togglePopup = () => {
@@ -94,10 +91,6 @@ const Header: React.FC = () => {
     setFormType((prevType) => (prevType === "login" ? "signup" : "login"));
   };
 
-  if (loading) {
-    return null; // or a loading spinner
-  }
-
   return (
     <>
       <div className="font-Poppins sticky top-0 left-0 right-0 sm:mx-12 md:mx-20 lg:mx-24 sm:rounded-b-3xl bg-zinc-900/95 z-50">
@@ -108,7 +101,23 @@ const Header: React.FC = () => {
             </h2>
           </Link>
           <nav className="space-x-6 text-sm flex items-center">
-            {/* Navigation links */}
+            <div className="space-x-6 hidden text-sm lg:flex items-center">
+              <Link href="/" className="hover:text-orange-500">
+                Menu
+              </Link>
+              <Link href="/offers" className="hover:text-orange-500">
+                Offers
+              </Link>
+              <Link href="/whatsNew" className="hover:text-orange-500">
+                What's New
+              </Link>
+              <Link href="/services" className="hover:text-orange-500 hidden  lg:block">
+                Services
+              </Link>
+            </div>
+            <a href="#" className="hover:text-orange-500 hidden xl:block">
+              Search
+            </a>
           </nav>
           <div className="flex items-center space-x-4">
             <IoMdNotificationsOutline className="text-gray-100" size={22} />
@@ -127,12 +136,9 @@ const Header: React.FC = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
+                      <Link className="flex items-center" href={"/profile/1234"}>
                       <User className="mr-2 h-4 w-4" />
-                      <span>Hello {user?.customer.name}</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
+                      <span>Profile</span></Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Settings className="mr-2 h-4 w-4" />
@@ -162,16 +168,29 @@ const Header: React.FC = () => {
                 </button>
               </div>
             )}
-            <Sheet>
-              <SheetTrigger asChild>
-                <button className="rounded-full bg-transparent lg:hidden ">
-                  <AlignJustify className="text-white h-5 w-5" />
-                </button>
-              </SheetTrigger>
-              <SheetContent className="flex flex-col justify-between">
-                {/* Mobile menu items */}
-              </SheetContent>
-            </Sheet>
+            <Sheet >
+            <SheetTrigger asChild className="">
+              <button  className="rounded-full bg-transparent lg:hidden ">
+                {" "}
+                <AlignJustify className="text-white h-5 w-5" />
+              </button>
+            </SheetTrigger>
+            <SheetContent className="flex flex-col justify-between">
+             
+              <div className="flex flex-col space-y-1">
+              <Link href="/" className="flex items-center gap-2 p-2 font-medium"><House/>Home</Link>
+              <Link href="/offers"  className="flex items-center gap-2 p-2 font-medium"><TicketPercent/>Offers</Link>
+              <Link href="/whatsNew" className="flex items-center gap-2 p-2 font-medium"><BadgePlus/>What's New</Link>
+              <Link href="/services" className="flex items-center gap-2 p-2 font-medium"><LifeBuoy />Services</Link>
+              <div className="flex items-center gap-2 p-2 font-medium"><Settings />Settings</div>
+              </div>
+              <SheetFooter>
+                <SheetClose asChild>
+                  <Button type="submit" className=" flex gap-1"><LogOut size={20}/>Logout</Button>
+                </SheetClose>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
           </div>
         </header>
       </div>
