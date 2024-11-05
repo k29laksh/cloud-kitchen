@@ -10,9 +10,8 @@ const reviewRoutes = require('./routes/review.js');
 
 
 // Mong DB work
-MONGO_URL = "mongodb://127.0.0.1:27017/kitchenConn";
 app.use(express.json());
-mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, }).then(() => console.log("MongoDB connected")).catch((err) => console.log(err));
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, }).then(() => console.log("MongoDB connected")).catch((err) => console.log(err));
 
 // Homemaker routes
 app.use("/homemaker", homemakerRoutes)
@@ -31,6 +30,6 @@ app.get("/", (req, res) => {
     res.send("Hii, login page");
 });
 
-app.listen(3000, () => {
-    console.log("App is listening to port 3000");
+app.listen(5000, () => {
+    console.log("App is listening to port 5000");
 });

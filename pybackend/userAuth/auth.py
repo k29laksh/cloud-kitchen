@@ -28,3 +28,4 @@ def authenticate_user(username, password):
         return None
     except Exception:
         return None
+# pip install django django-rest-framework django-cors-headers Pillow djangorestframework-simplejwt 

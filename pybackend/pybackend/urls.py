@@ -21,7 +21,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include("userAuth.urls")),
+    path('api/v1/userAuth/',include("userAuth.urls")),
     path('api/v1/food',include("food.urls")),
     path('api/v1/chefAuth/',include("chefAuth.urls")),
     path('api/v1/reviews/',include("reviews.urls"))

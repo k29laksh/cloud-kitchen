@@ -101,24 +101,30 @@ const Header: React.FC = () => {
             </h2>
           </Link>
           <nav className="space-x-6 text-sm flex items-center">
-            <div className="space-x-6 hidden text-sm lg:flex items-center">
-              <Link href="/" className="hover:text-orange-500">
-                Menu
-              </Link>
-              <Link href="/offers" className="hover:text-orange-500">
-                Offers
-              </Link>
-              <Link href="/whatsNew" className="hover:text-orange-500">
-                What's New
-              </Link>
-              <Link href="/services" className="hover:text-orange-500 hidden  lg:block">
-                Services
-              </Link>
-            </div>
-            <a href="#" className="hover:text-orange-500 hidden xl:block">
-              Search
-            </a>
-          </nav>
+  <div className="space-x-6 hidden text-sm lg:flex items-center">
+    <Link href="/" className="relative group">
+      <span className="hover:text-orange-500">Menu</span>
+      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+    </Link>
+    <Link href="/offers" className="relative group">
+      <span className="hover:text-orange-500">Offers</span>
+      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+    </Link>
+    <Link href="/whatsNew" className="relative group">
+      <span className="hover:text-orange-500">What's New</span>
+      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+    </Link>
+    <Link href="/services" className="relative group hidden lg:block">
+      <span className="hover:text-orange-500">Services</span>
+      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+    </Link>
+  </div>
+  <a href="#" className="relative group hover:text-orange-500 hidden xl:block">
+    <span>Search</span>
+    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+  </a>
+</nav>
+
           <div className="flex items-center space-x-4">
             <IoMdNotificationsOutline className="text-gray-100" size={22} />
             <Link href={"/cart"}>

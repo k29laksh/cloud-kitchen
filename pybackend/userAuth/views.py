@@ -11,7 +11,7 @@ class LoginView(APIView):
 
     def post(self, request, format=None):
         try:
-            username = request.data.get("username")
+            username = request.data.get("email")
             password = request.data.get("password")
             if not username or not password:
                 return Response(
@@ -49,21 +49,13 @@ class SignupView(APIView):
         try:
             email = request.data.get("email")
             password = request.data.get("password")
-            password2 = request.data.get("cnfpassword")
             username = request.data.get("username")
             address=request.data.get("address")
-            if not email or not password or not password2 or not username:
+            if not email or not password or not username:
                 return Response(
                     {"Error": "All fileds are required"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-
-            elif password != password2:
-                return Response(
-                    {"error": "Password do not match"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
             elif User.objects.filter(email=email).exists():
                 return Response(
                     {"error": "Email already exits"}, status=status.HTTP_400_BAD_REQUEST

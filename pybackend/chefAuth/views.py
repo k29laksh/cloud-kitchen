@@ -51,22 +51,15 @@ class SignupView(APIView):
         try:
             email = request.data.get("email")
             password = request.data.get("password")
-            password2 = request.data.get("cnfpassword")
             username = request.data.get("username")
             kitchenname=request.data.get("kitchenname")
             exp=request.data.get("exp")
             ph=request.data.get("ph")
             speciality=request.data.get("speciality")
             address=request.data.get("address")
-            if not email or not password or not password2 or not username:
+            if not email or not password or not username:
                 return Response(
                     {"Error": "All fileds are required"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-            elif password != password2:
-                return Response(
-                    {"error": "Password do not match"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 

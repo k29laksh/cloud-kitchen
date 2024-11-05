@@ -35,7 +35,7 @@ const foodItemSchema = new Schema({
         default: 0
     },
     reviews: [{
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId, 
         ref: 'Review'
     }]
 });

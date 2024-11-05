@@ -34,7 +34,7 @@ interface Recipe {
   category: string;
   calories: number;
   duration: number;
-  difficulty: string;
+  type: string;
   author: {
     name: string;
     username: string;
@@ -87,7 +87,7 @@ const RecipePage = () => {
     category: "Main dish",
     calories: 350,
     duration: 45,
-    difficulty: "Medium",
+    type: "Veg",
     author: {
       avatar: "/dp.webp",
       name: "Alice Wood",
@@ -95,13 +95,7 @@ const RecipePage = () => {
     },
     description:
       "A quick and healthy stir-fry featuring succulent shrimp sautéed to perfection, vibrant, crunchy vegetables, and a side of nutty brown rice. This dish is not only packed with...",
-    tags: [
-      "ComfortFood",
-      "HealthyEats",
-      "QuickRecipes",
-      "ShrimpLover",
-      "WholeGrainDelights",
-    ],
+    
     nutrients: {
       carbs: 45,
       protein: 8,
@@ -209,7 +203,7 @@ const RecipePage = () => {
             <div className="flex justify-between items-center gap-4 mb-4">
               <div className="flex flex-wrap items-center gap-4 ">
                 <Badge variant="secondary" className="flex items-center gap-1">
-                  <ChefHat className="w-4 h-4" /> {recipe.difficulty}
+                  <ChefHat className="w-4 h-4" /> {recipe.type}
                 </Badge>
                 <TooltipProvider>
                   <Tooltip>
@@ -288,18 +282,7 @@ const RecipePage = () => {
               </Button>
             </div>
 
-            {/* Tags */}
-            <div className="flex flex-wrap gap-2 mb-6">
-              {recipe.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="secondary"
-                  className="hover:bg-secondary/80 cursor-pointer"
-                >
-                  #{tag}
-                </Badge>
-              ))}
-            </div>
+           
 
             {/* Nutrients */}
             <Card className="mb-6">
