@@ -7,6 +7,8 @@ const homemakerRoutes = require('./routes/homemaker.js');
 const foodItemRoutes = require('./routes/foodItem');
 const reviewRoutes = require('./routes/review.js');
 
+
+
 // Mong DB work
 MONGO_URL = "mongodb://127.0.0.1:27017/kitchenConn";
 app.use(express.json());
@@ -29,6 +31,6 @@ app.get("/", (req, res) => {
     res.send("Hii, login page");
 });
 
-app.listen(5000, () => {
-    console.log("App is listening to port 5000");
+app.listen(3000, () => {
+    console.log("App is listening to port 3000");
 });

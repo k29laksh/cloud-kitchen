@@ -6,6 +6,9 @@ const jwt = require('jsonwebtoken');
 const { generateJWT, refreshJWTToken } = require('../routes/jwtFunc.js');
 const router = express.Router();
 const { authenticateHomemakerJWT } = require('../middleware.js');
+const { storage } = require('../cloudconfig.js');
+const multer = require('multer');
+const upload = multer({ storage });
 
 // Post req Route for homemaker register
 router.post("/register", async(req, res) => {
@@ -69,8 +72,7 @@ router.post("/completeProfile", authenticateHomemakerJWT, async(req, res) => {
 });
 
 // Route to add kitchen images
-router.post('/addKitchenImages', authenticateHomemakerJWT, async(req, res) => {
-    const { kitchenImages } = req.body; // Array of kitchen image URLs
+router.post('/addKitchenImages', authenticateHomemakerJWT, upload.array('kitchenImage', 10), async(req, res) => {
     const homemakerId = req.homemakerId; // Get homemaker ID from JWT
 
     try {
@@ -81,10 +83,9 @@ router.post('/addKitchenImages', authenticateHomemakerJWT, async(req, res) => {
             return res.status(404).json({ error: 'Homemaker not found' });
         }
 
-        // Append new kitchen images to existing kitchenImage array, if provided
-        if (kitchenImages && Array.isArray(kitchenImages)) {
-            homemaker.kitchenImage = [...new Set([...homemaker.kitchenImage, ...kitchenImages])];
-        }
+        const uploadedImages = req.files.map(file => file.path);
+        homemaker.kitchenImage = [...new Set([...homemaker.kitchenImage, ...uploadedImages])];
+
 
         await homemaker.save();
 

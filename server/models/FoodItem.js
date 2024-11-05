@@ -19,6 +19,9 @@ const foodItemSchema = new Schema({
         type: Number,
         required: true
     },
+    veg: {
+        type: Boolean
+    },
     images: {
         type: [String],
         required: true

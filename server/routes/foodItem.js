@@ -3,17 +3,26 @@ const router = express.Router();
 const FoodItem = require('../models/FoodItem');
 const { authenticateHomemakerJWT } = require('../middleware.js');
 const Homemaker = require('../models/Homemaker.js');
+const { storage } = require('../cloudconfig.js');
+const multer = require('multer');
+const upload = multer({ storage });
+
 // Create a new food item
-router.post('/', authenticateHomemakerJWT, async(req, res) => {
-    const { name, description, ingredients, timeToDeliver, images, price } = req.body;
+router.post('/', authenticateHomemakerJWT, upload.array('foodImage', 10), async(req, res) => {
+    const { name, description, ingredients, timeToDeliver, veg, price } = req.body;
     const homemakerId = req.homemakerId;
 
     try {
+        // Extract paths of uploaded images from req.files
+        const images = req.files ? req.files.map(file => file.path) : [];
+
+        // Create a new food item with uploaded images and other details
         const newFoodItem = new FoodItem({
             name,
             description,
             ingredients,
             timeToDeliver,
+            veg,
             images,
             price,
             homemaker: homemakerId
@@ -44,19 +53,6 @@ router.get('/:foodItemId', authenticateHomemakerJWT, async(req, res) => {
         const foodItem = await FoodItem.findById(foodItemId);
         if (!foodItem) return res.status(404).json({ error: 'Food item not found' });
         res.status(200).json({ foodItem });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
-// get all food items
-
-router.get('/', async(req, res) => {
-
-    try {
-        const foodItems = await FoodItem.find({});
-        if (!foodItems) return res.status(404).json({ error: 'Food items not found' });
-        res.status(200).json({ foodItems });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
