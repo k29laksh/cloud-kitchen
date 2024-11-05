@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'base'
+    'base',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
@@ -126,3 +127,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CELERY_BROKER_URL=os.environ.get("CELERY_BROKER_URL","redis://redis:6379/0")
 CELERY_RESULT_BACKEND=os.environ.get("CELERY_RESULT_BACKEND","redis://redis:6379/0")
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'send-daily-notifications-task': {
+        'task': 'myapp.tasks.send_daily_notifications',
+        'schedule': crontab(hour=8, minute=0),  # Scheduled at 8:00 AM daily
+    },
+    'send-daily-notifications-task-evening': {
+        'task': 'myapp.tasks.send_daily_notifications',
+        'schedule': crontab(hour=16, minute=0),  # Scheduled at 4:00 PM daily
+    },
+    'send-daily-notifications-task-night': {
+        'task': 'myapp.tasks.send_daily_notifications',
+        'schedule': crontab(hour=22, minute=0),  # Scheduled at 10:00 PM daily
+    }
+}

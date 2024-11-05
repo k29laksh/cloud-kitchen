@@ -10,13 +10,12 @@ services:
     volumes:
       - .:/usr/src/app/
     ports:
-      - 8000:8000
+      - 5000:8000
     environment:
       - DEBUG=1
       - ALLOWED_HOSTS=localhost,127.0.0.1
     depends_on:
       - redis
-  
   celery:
     container_name: celery
     build: .
@@ -26,5 +25,18 @@ services:
     environment:
       - DEBUG=1
       - ALLOWED_HOSTS=localhost,127.0.0.1
+    depends_on:
+      - redis
+  celery-beat:
+    container_name: celery-beat
+    build:
+      context: .
+    command: celery --app=pyserver beat -l INFO
+    volumes:
+      - .:/usr/src/app/
+    environment:
+      - DEBUG=1
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - CELERY_BROKER_URL=redis://redis:6379/0
     depends_on:
       - redis

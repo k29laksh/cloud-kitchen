@@ -36,7 +36,7 @@ def bot(disease=None,city=None,message=None):
         response = model.generate_content(f'This is todays weather forcast: description:{data["weather"][0]["description"]}. Recommend 3-6 name only of home made dishes in india(comma separated) to eat according to provided weather forcast.').text
         response=model.generate_content(f'Generate a small notification (simple text,no bold words and 1 liner) considering one of these food items {response} to attract customers on online to buy food.').text
     elif disease!=None:
-        response = model.generate_content(f'I have {disease}.Can you recommend 3-6 name only (comma separated) to eat from all these list of items:{list}  so that i can recover fastly').text
+        response = model.generate_content(f'I have {disease}.Can you recommend 3-6 dishes name only (comma separated) so that i can recover fastly').text
     elif message!=None:
         response=model.generate_content(f'This are the issues {message} now recommend what should be done to improve ones cloud kitchen in breifly and concise (max 4 lines)').text
     formatted_text = re.sub(r'\*\*(.*?)\*\*', r'', response)
@@ -133,10 +133,9 @@ def calculate_rank(data, C):
 
 class get_ranking(APIView):
     def get(self, request):
-        # data=requests.get('http://localhost:8000/kitchens/').content
-        # data=json.loads(data)
-        # c=data['c']
-        # data=data['data']
+        data=request.data
+        c=data['c']
+        data=data['data']
         final_ranks = [(k, calculate_rank(v, c)) for k, v in data.items()]
         sorted_ranks = sorted(final_ranks, key=lambda x: x[1], reverse=True)
         sorted_ids = [kitchen_id for kitchen_id, _ in sorted_ranks]
@@ -144,14 +143,19 @@ class get_ranking(APIView):
 
 class disease_view(APIView):
     def get(self,request):
-        formatted_text=bot("diabetes")
+        dise=request.data.get('disease')
+        formatted_text=bot(dise)
         return Response({"resp": formatted_text})
 
-class weather_view(APIView):
+class notification_view(APIView):
     def get(self,request):
-        formatted_text=bot(city="Jaipur")
-        return Response({"resp": formatted_text})
-    
+        latest_notification = models.Notification.objects.order_by('-created_at').first()
+        if latest_notification:
+            serializer = serializer.NotificationSerializer(latest_notification)
+            return Response(serializer.data)
+        else:
+            return Response({"message": "No notifications available."})
+
 sample_reviews = [
     "The pizza was amazing but the service was extremely slow. Had to wait 45 minutes!",
     "Found a hair in my soup and the manager didn't seem to care at all.",
@@ -171,13 +175,12 @@ def h(l):
     return r
 
 class message_view(APIView):
-    def get(self,request,pk):
-        reviews=requests.get(f'http://localhost:8000/reviews/{pk}').content
-        reviews=json.loads(reviews)
-        reviews=reviews['resp']
+    def get(self,request):
+        reviews=request.data.get
+        # reviews=json.loads(reviews)
+        reviews=reviews('sample_reviews')
         analyzer = EnhancedReviewAnalyzer()
         results = analyzer.analyze_reviews(reviews)
         message=h(results["recommendations"]["moderate"][0]["example_reviews"])
-        # message=request.get('message')
         formatted_text=bot(message=message)
         return Response({"resp": formatted_text})

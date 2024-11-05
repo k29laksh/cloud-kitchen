@@ -12,3 +12,8 @@ class RelatedItemSerializer(serializers.ModelSerializer):
     
     def get_frequently_bought_with(self, obj):
         return json.loads(obj.frequently_bought_with)
+    
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Notification
+        fields = '__all__'
