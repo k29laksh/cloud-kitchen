@@ -7,11 +7,13 @@ import { reviewApi } from './Service/review';
 import { authApi } from './Service/auth';
 import authReducer from './features/authFeature';
 import { profileApi } from './Service/profile';
+import { dishApi } from './Service/dish';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     [postApi.reducerPath]: postApi.reducer,
+    [dishApi.reducerPath]: dishApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [reviewApi.reducerPath]: reviewApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
@@ -19,6 +21,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       authApi.middleware,
+      dishApi.middleware,
       postApi.middleware,
       reviewApi.middleware,
       profileApi.middleware,

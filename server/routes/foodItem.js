@@ -3,18 +3,36 @@ const router = express.Router();
 const FoodItem = require('../models/FoodItem');
 const { authenticateHomemakerJWT } = require('../middleware.js');
 const Homemaker = require('../models/Homemaker.js');
-const { storage } = require('../cloudconfig.js');
-const multer = require('multer');
-const upload = multer({ storage });
+const fs = require('fs');
+const path = require('path');
+
+// Utility function to save base64 images as files
+const saveBase64Image = (base64Data, fileName) => {
+    const base64Image = base64Data.split(';base64,').pop();
+    const uploadDir = path.join(__dirname, '../uploads');
+    const filePath = path.join(uploadDir, fileName);
+
+    // Ensure the directory exists
+    fs.mkdirSync(uploadDir, { recursive: true });
+
+    // Write the file in base64 encoding
+    fs.writeFileSync(filePath, base64Image, { encoding: 'base64' });
+
+    // Return the relative path to use as a URL
+    return `/uploads/${fileName}`;
+};
 
 // Create a new food item
-router.post('/', authenticateHomemakerJWT, upload.array('foodImage', 10), async(req, res) => {
-    const { name, description, ingredients, timeToDeliver, veg, price } = req.body;
+router.post('/', authenticateHomemakerJWT, async (req, res) => {
+    const { name, description, ingredients, timeToDeliver, veg, price, foodImages } = req.body;
     const homemakerId = req.homemakerId;
 
     try {
-        // Extract paths of uploaded images from req.files
-        const images = req.files ? req.files.map(file => file.path) : [];
+        // Process and save each base64 image
+        const images = foodImages.map((image, index) => {
+            const fileName = `food_${Date.now()}_${index}.png`;  // Customize filename as needed
+            return saveBase64Image(image.fileContent, fileName);
+        }).filter(filePath => filePath !== null); // Filter out any nulls from failed saves
 
         // Create a new food item with uploaded images and other details
         const newFoodItem = new FoodItem({
@@ -43,6 +61,9 @@ router.post('/', authenticateHomemakerJWT, upload.array('foodImage', 10), async(
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+module.exports = router;
+
 
 
 // Get a food item by ID
@@ -89,6 +110,20 @@ router.delete('/:foodItemId', authenticateHomemakerJWT, async(req, res) => {
 });
 
 // Get all food items created by the homemaker
+// Get all food items created by the homemaker
+router.get('/getAll', async (req, res) => {
+    try {
+      const foodItems = await FoodItem.find({});
+      if (!foodItems || foodItems.length === 0) {
+        return res.status(404).json({ error: 'No food items found' });
+      }
+      res.status(200).json(foodItems);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
+    }
+});
+ 
 router.get('/', authenticateHomemakerJWT, async(req, res) => {
     const homemakerId = req.homemakerId;
 

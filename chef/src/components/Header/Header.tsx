@@ -104,24 +104,24 @@ const Header: React.FC = () => {
   <div className="space-x-6 hidden text-sm lg:flex items-center">
     <Link href="/" className="relative group">
       <span className="hover:text-orange-500">Menu</span>
-      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+      <span className="absolute bottom-0 hover:rounded-full left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
     </Link>
     <Link href="/offers" className="relative group">
       <span className="hover:text-orange-500">Offers</span>
-      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+      <span className="absolute bottom-0 hover:rounded-full left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
     </Link>
-    <Link href="/whatsNew" className="relative group">
-      <span className="hover:text-orange-500">What's New</span>
-      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
-    </Link>
+    <Link href="/allDishes" className="relative group">
+                <span className="hover:text-orange-500"> Your Dishes</span>
+                <span className="absolute bottom-0 hover:rounded-full left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+              </Link>
     <Link href="/services" className="relative group hidden lg:block">
       <span className="hover:text-orange-500">Services</span>
-      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+      <span className="absolute bottom-0 hover:rounded-full left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
     </Link>
   </div>
   <a href="#" className="relative group hover:text-orange-500 hidden xl:block">
     <span>Search</span>
-    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+    <span className="absolute bottom-0 hover:rounded-full left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
   </a>
 </nav>
 

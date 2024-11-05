@@ -32,7 +32,6 @@ import Link from "next/link";
 interface Recipe {
   title: string;
   category: string;
-  calories: number;
   duration: number;
   type: string;
   author: {
@@ -41,7 +40,6 @@ interface Recipe {
     avatar?: string;
   };
   description: string;
-  tags: string[];
   nutrients: {
     carbs: number;
     protein: number;
@@ -85,7 +83,6 @@ const RecipePage = () => {
   const recipe: Recipe = {
     title: "Shrimp Stir-Fry with Brown Rice",
     category: "Main dish",
-    calories: 350,
     duration: 45,
     type: "Veg",
     author: {
@@ -208,9 +205,7 @@ const RecipePage = () => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger className="text-sm ">
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" /> {recipe.calories}kcal
-                      </div>
+                      
                     </TooltipTrigger>
                     <TooltipContent>Calories per serving</TooltipContent>
                   </Tooltip>

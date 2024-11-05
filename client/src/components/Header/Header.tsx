@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { PiShoppingCartSimple } from "react-icons/pi";
-import Login from "../Form/Login"; 
+import Login from "../Form/Login";
 import { RxCross2 } from "react-icons/rx";
-import { logout } from '@/redux/features/authFeature';
+import { logout } from "@/redux/features/authFeature";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/redux/useDispatch";
 import {
@@ -25,7 +25,15 @@ import {
   TicketPercent,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuGroup } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+} from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { RootState } from "@/redux/store";
 
@@ -45,7 +53,7 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     // Only set user state on client side
-    const storedUserInfo = localStorage.getItem('userInfo');
+    const storedUserInfo = localStorage.getItem("userInfo");
     if (storedUserInfo) {
       setUser(JSON.parse(storedUserInfo));
     }
@@ -95,33 +103,39 @@ const Header: React.FC = () => {
     <>
       <div className="font-Poppins sticky top-0 left-0 right-0 sm:mx-12 md:mx-20 lg:mx-24 sm:rounded-b-3xl bg-zinc-900/95 z-50">
         <header className="text-gray-100 py-3 sm:py-4 lg:py-5 px-3 sm:px-6 md:px-8 lg:px-12 flex justify-between items-center rounded-b-3xl">
-          <Link href={'/'}>
+          <Link href={"/"}>
             <h2 className="text-gray-100 text-xl lg:text-2xl font-semibold leading-tight">
               Kitchen<span className="text-orange-500">Conn</span>
             </h2>
           </Link>
           <nav className="space-x-6 text-sm flex items-center">
             <div className="space-x-6 hidden text-sm lg:flex items-center">
-              <Link href="/" className="hover:text-orange-500">
-                Menu
+              <Link href="/" className="relative group">
+                <span className="hover:text-orange-500">Menu</span>
+                <span className="absolute bottom-0 hover:rounded-full left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
               </Link>
-              <Link href="/offers" className="hover:text-orange-500">
-                Offers
+              <Link href="/offers" className="relative group">
+                <span className="hover:text-orange-500">Offers</span>
+                <span className="absolute bottom-0 hover:rounded-full left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
               </Link>
-              <Link href="/whatsNew" className="hover:text-orange-500">
-                What's New
+              <Link href="/whatsNew" className="relative group">
+                <span className="hover:text-orange-500">What's New</span>
+                <span className="absolute bottom-0 hover:rounded-full left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
               </Link>
-              <Link href="/services" className="hover:text-orange-500 hidden  lg:block">
-                Services
-              </Link>
-              <Link href="/community" className="hover:text-orange-500 hidden  lg:block">
-                Community
+              <Link href="/services" className="relative group hidden lg:block">
+                <span className="hover:text-orange-500">Services</span>
+                <span className="absolute bottom-0 hover:rounded-full left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
               </Link>
             </div>
-            <a href="#" className="hover:text-orange-500 hidden xl:block">
-              Search
+            <a
+              href="#"
+              className="relative group hover:text-orange-500 hidden xl:block"
+            >
+              <span>Search</span>
+              <span className="absolute bottom-0 hover:rounded-full left-0 w-full h-[2px] bg-orange-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
             </a>
           </nav>
+
           <div className="flex items-center space-x-4">
             <IoMdNotificationsOutline className="text-gray-100" size={22} />
             <Link href={"/cart"}>
@@ -131,17 +145,27 @@ const Header: React.FC = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <div className="flex items-center gap-2">
-                    <img src={"/dp.webp"} alt="avatar" className="w-9 h-9 object-cover rounded-full" />
+                    <img
+                      src={"/dp.webp"}
+                      alt="avatar"
+                      className="w-9 h-9 object-cover rounded-full"
+                    />
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
-                  <DropdownMenuLabel className="text-orange-500">My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-orange-500">
+                    My Account
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
-                      <Link className="flex items-center" href={"/profile/1234"}>
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span></Link>
+                      <Link
+                        className="flex items-center"
+                        href={"/profile/1234"}
+                      >
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Settings className="mr-2 h-4 w-4" />
@@ -157,43 +181,76 @@ const Header: React.FC = () => {
               </DropdownMenu>
             ) : (
               <div className="flex items-center gap-4 text-sm">
-                <button onClick={() => {
-                  setFormType("login");
-                  togglePopup();
-                }}>
+                <button
+                  onClick={() => {
+                    setFormType("login");
+                    togglePopup();
+                  }}
+                >
                   Log in
                 </button>
-                <button onClick={() => {
-                  setFormType("signup");
-                  togglePopup();
-                }}>
+                <button
+                  onClick={() => {
+                    setFormType("signup");
+                    togglePopup();
+                  }}
+                >
                   Sign up
                 </button>
               </div>
             )}
-            <Sheet >
-            <SheetTrigger asChild className="">
-              <button  className="rounded-full bg-transparent lg:hidden ">
-                {" "}
-                <AlignJustify className="text-white h-5 w-5" />
-              </button>
-            </SheetTrigger>
-            <SheetContent className="flex flex-col justify-between">
-             
-              <div className="flex flex-col space-y-1">
-              <Link href="/" className="flex items-center gap-2 p-2 font-medium"><House/>Home</Link>
-              <Link href="/offers"  className="flex items-center gap-2 p-2 font-medium"><TicketPercent/>Offers</Link>
-              <Link href="/whatsNew" className="flex items-center gap-2 p-2 font-medium"><BadgePlus/>What's New</Link>
-              <Link href="/services" className="flex items-center gap-2 p-2 font-medium"><LifeBuoy />Services</Link>
-              <div className="flex items-center gap-2 p-2 font-medium"><Settings />Settings</div>
-              </div>
-              <SheetFooter>
-                <SheetClose asChild>
-                  <Button type="submit" className=" flex gap-1"><LogOut size={20}/>Logout</Button>
-                </SheetClose>
-              </SheetFooter>
-            </SheetContent>
-          </Sheet>
+            <Sheet>
+              <SheetTrigger asChild className="">
+                <button className="rounded-full bg-transparent lg:hidden ">
+                  {" "}
+                  <AlignJustify className="text-white h-5 w-5" />
+                </button>
+              </SheetTrigger>
+              <SheetContent className="flex flex-col justify-between">
+                <div className="flex flex-col space-y-1">
+                  <Link
+                    href="/"
+                    className="flex items-center gap-2 p-2 font-medium"
+                  >
+                    <House />
+                    Home
+                  </Link>
+                  <Link
+                    href="/offers"
+                    className="flex items-center gap-2 p-2 font-medium"
+                  >
+                    <TicketPercent />
+                    Offers
+                  </Link>
+                  <Link
+                    href="/whatsNew"
+                    className="flex items-center gap-2 p-2 font-medium"
+                  >
+                    <BadgePlus />
+                    What's New
+                  </Link>
+                  <Link
+                    href="/services"
+                    className="flex items-center gap-2 p-2 font-medium"
+                  >
+                    <LifeBuoy />
+                    Services
+                  </Link>
+                  <div className="flex items-center gap-2 p-2 font-medium">
+                    <Settings />
+                    Settings
+                  </div>
+                </div>
+                <SheetFooter>
+                  <SheetClose asChild>
+                    <Button type="submit" className=" flex gap-1">
+                      <LogOut size={20} />
+                      Logout
+                    </Button>
+                  </SheetClose>
+                </SheetFooter>
+              </SheetContent>
+            </Sheet>
           </div>
         </header>
       </div>
@@ -201,15 +258,29 @@ const Header: React.FC = () => {
       {isPopupOpen && (
         <div
           id="popup-overlay"
-          className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${isAnimating ? "opacity-100" : "opacity-0"}`}
+          className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
+            isAnimating ? "opacity-100" : "opacity-0"
+          }`}
           onClick={closePopup}
         >
           <div
-            className={`relative bg-white p-4 rounded-lg shadow-lg transform transition-transform duration-300 ${isAnimating ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}`}
+            className={`relative bg-white p-4 rounded-lg shadow-lg transform transition-transform duration-300 ${
+              isAnimating
+                ? "translate-y-0 opacity-100"
+                : "translate-y-12 opacity-0"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <RxCross2 className="absolute top-4 right-4 cursor-pointer" size={24} onClick={togglePopup} />
-            <Login toggleFormType={toggleFormType} formType={formType} onLoginSuccess={handleLoginSuccess} />
+            <RxCross2
+              className="absolute top-4 right-4 cursor-pointer"
+              size={24}
+              onClick={togglePopup}
+            />
+            <Login
+              toggleFormType={toggleFormType}
+              formType={formType}
+              onLoginSuccess={handleLoginSuccess}
+            />
           </div>
         </div>
       )}
