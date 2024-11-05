@@ -49,6 +49,19 @@ router.get('/:foodItemId', authenticateHomemakerJWT, async(req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+// get all food items
+
+router.get('/', async(req, res) => {
+
+    try {
+        const foodItems = await FoodItem.find({});
+        if (!foodItems) return res.status(404).json({ error: 'Food items not found' });
+        res.status(200).json({ foodItems });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 // Update an existing food item
 router.put('/:foodItemId', authenticateHomemakerJWT, async(req, res) => {

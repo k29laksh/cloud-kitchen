@@ -29,6 +29,6 @@ app.get("/", (req, res) => {
     res.send("Hii, login page");
 });
 
-app.listen(3000, () => {
-    console.log("App is listening to port 3000");
+app.listen(5000, () => {
+    console.log("App is listening to port 5000");
 });
