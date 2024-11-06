@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useGetAllDishesQuery } from "@/redux/Service/dish";
 import { Audio } from 'react-loader-spinner'
 import { useRouter } from "next/navigation";
@@ -17,7 +18,7 @@ interface Dish {
   rating?: number;
 }
 
-const Recommanded_dish1: React.FC = () => {
+const AllDishes: React.FC = () => {
   // Fetch dishes using RTK query
   const router = useRouter();
 
@@ -26,12 +27,12 @@ const Recommanded_dish1: React.FC = () => {
   console.log(dishes);
   
   if (isLoading) {
-    return <div className="h-screen flex justify-center items-center">
+    return <div className=" flex justify-center items-center">
         <Audio
   height="80"
   width="80"
   radius="9"
-  color="green"
+  color="orange"
   ariaLabel="loading"
   wrapperStyle
   wrapperClass
@@ -44,25 +45,19 @@ const Recommanded_dish1: React.FC = () => {
   }
 
   return (
-    <div className="h-screen flex gap-6 flex-wrap py-4 md:pb-8 px-4 sm:px-24 md:px-12 lg:px-32 xl:px-52 flex-col">
-     <div>
-     <Button
-        variant="ghost"
-        className="mb-4 gap-2"
-        onClick={() => router.back()}
-      >
-        <ArrowLeft className="w-4 h-4 " />
-        Back / You Dishes
-      </Button>
-     </div>
+    <div className="flex gap-6 flex-wrap py-4 md:pb-8  flex-col">
+     
+      <div className='flex justify-center sm:flex-wrap sm:justify-start sm:gap-6'>
       {dishes?.map((dish) => (
-        <div key={dish.name} className="w-[200px] md:w-[250px] mb-6">
+        <div key={dish.name} className="w-[200px] md:w-[250px] ">
+          <Link href={`/recipe/${dish?._id}`}>
           <div
-            className="w-full sm:w-[250px] aspect-square bg-center bg-no-repeat bg-cover rounded-xl"
+            className="w-[200px] md:w-[250px] aspect-square bg-center bg-no-repeat bg-cover rounded-xl"
             style={{
               backgroundImage: `url(${dish.images[0] ? `http://localhost:5000${dish.images[0]}` : "/placeholder_image.png"})`, // Use a placeholder if no image
             }}
           ></div>
+          </Link>
           <div className="mt-2">
             <div className="flex items-start space-x-1">
               {dish.veg ? (
@@ -114,8 +109,9 @@ const Recommanded_dish1: React.FC = () => {
           </div>
         </div>
       ))}
+      </div>
     </div>
   );
 };
 
-export default Recommanded_dish1;
+export default AllDishes;

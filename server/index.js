@@ -9,6 +9,7 @@ const reviewRoutes = require('./routes/review.js');
 const cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const cartRoutes = require('./routes/cart.js');
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -25,9 +26,22 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve u
 
 // Routes
 app.use("/homemaker", homemakerRoutes);
+
+// Mong DB work
+
+
+// Homemaker routing
+app.use("/homemaker", homemakerRoutes)
+
+// Customer routing 
 app.use("/customer", customerRoutes);
 app.use("/foodItems", foodItemRoutes);
+
+// Review routing
 app.use("/review", reviewRoutes);
+
+// Cart routing
+app.use("/cart", cartRoutes);
 
 // Index route
 app.get("/", (req, res) => {

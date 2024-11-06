@@ -56,6 +56,7 @@ const Recommanded_dish1: React.FC = () => {
         Back / You Dishes
       </Button>
      </div>
+      <div className='flex justify-center sm:flex-wrap sm:justify-start sm:gap-6'>
       {dishes?.map((dish) => (
         <div key={dish.name} className="w-[200px] md:w-[250px] mb-6">
           <div
@@ -115,6 +116,7 @@ const Recommanded_dish1: React.FC = () => {
           </div>
         </div>
       ))}
+      </div>
     </div>
   );
 };

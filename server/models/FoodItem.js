@@ -35,9 +35,14 @@ const foodItemSchema = new Schema({
         default: 0
     },
     reviews: [{
-        type: Schema.Types.ObjectId, 
+        type: Schema.Types.ObjectId,
         ref: 'Review'
-    }]
+    }],
+    homemaker: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Homemaker',
+        required: true,
+    },
 });
 
 module.exports = mongoose.model('FoodItem', foodItemSchema);

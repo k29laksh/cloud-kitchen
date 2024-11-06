@@ -1,114 +1,109 @@
 const express = require('express');
 const router = express.Router();
-const Cart = require('../models/cart'); // Import Cart model
-const FoodItem = require('../models/FoodItem'); // Import FoodItem model
-const authenticateCustomerJWT = require('../middleware/authenticateCustomerJWT'); // Import JWT middleware
+const Customer = require('../models/Customer');
+const { authenticateCustomerJWT } = require('../middleware.js');
 
-// Add item to cart
-router.post('/add', authenticateCustomerJWT, async(req, res) => {
-    const { foodItemId, quantity } = req.body;
-    const customerId = req.customerId;
-
-    try {
-        // Check if food item exists
-        const foodItem = await FoodItem.findById(foodItemId);
-        if (!foodItem) {
-            return res.status(404).json({ message: 'Food item not found' });
-        }
-
-        // Check if the customer's cart exists
-        let cart = await Cart.findOne({ customer: customerId });
-        if (!cart) {
-            // Create a new cart if it doesn't exist
-            cart = new Cart({ customer: customerId, items: [] });
-        }
-
-        // Check if the item already exists in the cart
-        const existingItem = cart.items.find(item => item.foodItem.toString() === foodItemId);
-        if (existingItem) {
-            // Update the quantity if the item already exists
-            existingItem.quantity += quantity;
-        } else {
-            // Add the new item to the cart
-            cart.items.push({ foodItem: foodItemId, quantity });
-        }
-
-        // Save the cart
-        await cart.save();
-        res.status(201).json({ message: 'Item added to cart successfully', cart });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
-
-// Get customer's cart
+// Get the cart for the authenticated customer
 router.get('/', authenticateCustomerJWT, async(req, res) => {
     const customerId = req.customerId;
 
     try {
-        const cart = await Cart.findOne({ customer: customerId }).populate('items.foodItem', 'name price');
-        if (!cart) {
-            return res.status(404).json({ message: 'Cart not found' });
-        }
-        res.status(200).json(cart);
+        const customer = await Customer.findById(customerId).select('cart');
+        if (!customer) return res.status(404).json({ error: 'Customer not found' });
+
+        res.status(200).json(customer.cart);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
     }
 });
 
-// Update item quantity
-router.put('/update/:itemId', authenticateCustomerJWT, async(req, res) => {
-    const { quantity } = req.body;
+// Add an item to the cart
+router.post('/add', authenticateCustomerJWT, async(req, res) => {
     const customerId = req.customerId;
-    const { itemId } = req.params;
+    const { foodItem, homemaker, quantity, price } = req.body;
 
     try {
-        const cart = await Cart.findOne({ customer: customerId });
-        if (!cart) {
-            return res.status(404).json({ message: 'Cart not found' });
+        const customer = await Customer.findById(customerId);
+        if (!customer) return res.status(404).json({ error: 'Customer not found' });
+
+        const existingItem = customer.cart.items.find(item => item.foodItem.toString() === foodItem);
+
+        if (existingItem) {
+            existingItem.quantity += quantity; // Increase quantity
+        } else {
+            customer.cart.items.push({ foodItem, homemaker, quantity, price });
         }
 
-        // Find the item in the cart
-        const item = cart.items.find(item => item._id.toString() === itemId);
-        if (!item) {
-            return res.status(404).json({ message: 'Item not found in cart' });
-        }
+        // Update total price
+        customer.cart.totalPrice = customer.cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
 
-        // Update the quantity
+        await customer.save();
+        res.status(201).json({ message: 'Item added to cart successfully', cart: customer.cart });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// Update an item in the cart
+router.put('/:foodItemId', authenticateCustomerJWT, async(req, res) => {
+    const customerId = req.customerId;
+    const { foodItemId } = req.params;
+    const { quantity } = req.body;
+
+    try {
+        const customer = await Customer.findById(customerId);
+        if (!customer) return res.status(404).json({ error: 'Customer not found' });
+
+        const item = customer.cart.items.find(item => item.foodItem.toString() === foodItemId);
+        if (!item) return res.status(404).json({ error: 'Item not found in cart' });
+
         item.quantity = quantity;
 
-        // Save the cart
-        await cart.save();
-        res.status(200).json({ message: 'Item quantity updated successfully', cart });
+        // Update total price
+        customer.cart.totalPrice = customer.cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+
+        await customer.save();
+        res.status(200).json({ message: 'Cart updated successfully', cart: customer.cart });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
     }
 });
 
-// Remove item from cart
-router.delete('/remove/:itemId', authenticateCustomerJWT, async(req, res) => {
+// Remove an item from the cart
+// Remove an item from the cart
+router.delete('/:foodItemId', authenticateCustomerJWT, async(req, res) => {
     const customerId = req.customerId;
-    const { itemId } = req.params;
+    const { foodItemId } = req.params;
 
     try {
-        const cart = await Cart.findOne({ customer: customerId });
-        if (!cart) {
-            return res.status(404).json({ message: 'Cart not found' });
+        const customer = await Customer.findById(customerId);
+        if (!customer) return res.status(404).json({ error: 'Customer not found' });
+
+        // Log the current items in the cart for debugging
+        console.log('Current items in cart before removal:', customer.cart.items);
+
+        // Filter out the item with the given foodItemId
+        const initialItemCount = customer.cart.items.length;
+        customer.cart.items = customer.cart.items.filter(item => item.foodItem.toString() !== foodItemId);
+
+        // Check if any items were removed
+        if (customer.cart.items.length === initialItemCount) {
+            return res.status(404).json({ error: 'Food item not found in cart' });
         }
 
-        // Remove the item from the cart
-        cart.items = cart.items.filter(item => item._id.toString() !== itemId);
+        // Update total price
+        customer.cart.totalPrice = customer.cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
 
-        // Save the cart
-        await cart.save();
-        res.status(200).json({ message: 'Item removed from cart successfully', cart });
+        await customer.save();
+        res.status(200).json({ message: 'Item removed from cart successfully', cart: customer.cart });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
     }
 });
+
 
 module.exports = router;

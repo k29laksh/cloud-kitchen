@@ -1,5 +1,7 @@
 "use client"
 import React from "react";
+import { Audio } from 'react-loader-spinner'
+
 import { useRouter, useParams } from "next/navigation";
 import {
   Clock,
@@ -25,6 +27,7 @@ import RatingSection from "@/components/Sections/Recipe/RatingSection";
 import Recommanded_dish1 from "@/components/Sections/Recipe/Recommanded_dish1";
 import Link from "next/link";
 import { useGetSingleDishQuery } from "@/redux/Service/dish";
+import AllDishes from "@/components/Sections/HomeSections/AllDishes";
 
 const RecipePage = () => {
   const router = useRouter();
@@ -34,8 +37,23 @@ const RecipePage = () => {
   const recipe= data?.foodItem;
   console.log(recipe)
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error || !recipe) return <div>Failed to load recipe</div>;
+  if (isLoading) {
+    return <div className="h-screen flex justify-center items-center">
+        <Audio
+  height="80"
+  width="80"
+  radius="9"
+  color="orange"
+  ariaLabel="loading"
+  wrapperStyle
+  wrapperClass
+/>
+    </div>;
+  }
+
+  if (error) {
+    return <div>Error loading dishes.</div>;
+  }
 
   return (
     <div className="py-4 md:py-8 px-4 sm:px-24 md:px-12 lg:px-32 xl:px-52">
@@ -83,7 +101,7 @@ const RecipePage = () => {
             </div>
 
             <div className="flex items-center justify-between mb-6">
-              <Link href={`/chef/${recipe.author?.username || "chef"}`} className="flex items-center gap-2">
+              <Link href={`/chef/${recipe.homemaker?._id || "chef"}`} className="flex items-center gap-2">
                 <Avatar>
                   <AvatarImage
                     className="object-cover"
@@ -152,12 +170,11 @@ const RecipePage = () => {
                   <Tooltip>
                     <TooltipTrigger>
                       <div className="flex flex-col items-center text-center">
-                        <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-1">
-                          <span className="text-xl">🍤</span>
-                        </div>
-                        <span className="text-sm text-gray-600">
+                        
+                        <Badge variant="secondary" className="flex items-center gap-1">
+
                           {ingredient}
-                        </span>
+                        </Badge>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>{ingredient}</TooltipContent>
@@ -170,16 +187,18 @@ const RecipePage = () => {
             <div className="md:hidden ">
               <RatingSection />
             </div>
-            <Separator className="my-4" />
+            
+          </CardContent>
+        </Card>
+
+      </div>
+      <Separator className="my-4" />
             <div className="overflow-x-hidden">
               <h1 className="text-xl font-semibold pb-2">
                 Explore Similar Recipes
               </h1>
-              <Recommanded_dish1 />
+              <AllDishes />
             </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 };

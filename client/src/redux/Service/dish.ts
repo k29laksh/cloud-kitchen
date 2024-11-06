@@ -34,7 +34,7 @@ export const dishApi = createApi({
   endpoints: (builder) => ({
     // get all dishes
     getAllDishes: builder.query<Dish[], void>({
-      query: () => `/getAll`,
+      query: () => `/all`,
       providesTags: [{ type: 'Dish', id: 'LIST' }],
     }),
     getSingleDish: builder.query<Dish, string>({
