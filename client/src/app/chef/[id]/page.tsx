@@ -1,4 +1,5 @@
 'use client'
+import { useRouter, useParams } from "next/navigation";
 
 import { FC, useState } from "react"
 import Image from "next/image"
@@ -11,7 +12,8 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { MapPin, Mail, Phone, Home, Building, MapIcon, Edit, LogOut, FileText, Star, Clock, Utensils, Instagram, Twitter } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-
+import { useGetChefQuery } from "@/redux/Service/auth"
+import { useCart } from "@/redux/useCart";
 interface ChefProfileProps {
   chef: {
     username: string;
@@ -87,8 +89,16 @@ const tempChef: ChefProfileProps = {
 };
 
 const ChefProfile: FC<ChefProfileProps> = ({ chef, kitchenImages, dishes }) => {
+
   const [activeTab, setActiveTab] = useState("info")
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const {id}=useParams();
+  const { data, isLoading, error } = useGetChefQuery(id as string)
+const chef2=data?.homemaker;
+  console.log("chef",chef2)
+
+  const dishData= chef2?.foodItems;
+  console.log(dishData)
 
   return (
     <div className="container mx-auto py-10 px-4 sm:px-6 lg:px-8 max-w-4xl">
@@ -117,7 +127,7 @@ const ChefProfile: FC<ChefProfileProps> = ({ chef, kitchenImages, dishes }) => {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="text-2xl font-bold"
               >
-                {chef.name}
+                {chef2?.name}
               </motion.h2>
               <motion.p
                 initial={{ x: -20, opacity: 0 }}
@@ -125,7 +135,7 @@ const ChefProfile: FC<ChefProfileProps> = ({ chef, kitchenImages, dishes }) => {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="text-muted-foreground"
               >
-                @{chef.username}
+                @{chef2?.name}
               </motion.p>
             </div>
             <motion.div
@@ -258,7 +268,7 @@ const ChefProfile: FC<ChefProfileProps> = ({ chef, kitchenImages, dishes }) => {
                 >
                   <h3 className="text-lg font-semibold mb-4">Featured Dishes</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {dishes.map((dish, index) => (
+                    {dishData?.map((dish, index) => (
                       <motion.div
                         key={dish.id}
                         initial={{ opacity: 0, y: 20 }}
@@ -269,7 +279,7 @@ const ChefProfile: FC<ChefProfileProps> = ({ chef, kitchenImages, dishes }) => {
                           <CardHeader className="p-0">
                             <div className="relative aspect-video">
                               <Image
-                                src={dish.imageUrl}
+                                src={dish.images[0] ? `http://localhost:5000${dish.images[0]}` : "/placeholder_image.png"}
                                 alt={dish.name}
                                 layout="fill"
                                 objectFit="cover"

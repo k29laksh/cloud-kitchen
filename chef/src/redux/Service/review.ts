@@ -24,7 +24,7 @@ export const reviewApi = createApi({
   endpoints: (builder) => ({
     // view all reviews
     getAllreviews: builder.query({
-      query: (id) => `/reviews/${id}`,
+      query: (id) => `/review/${id}`,
 
       providesTags: [{ type: "review", id: "LIST" }],
     }),

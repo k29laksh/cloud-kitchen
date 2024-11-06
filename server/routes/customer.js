@@ -7,6 +7,24 @@ const router = express.Router();
 const { authenticateCustomerJWT } = require('../middleware.js');
 const Review = require('../models/Review.js');
 
+// get customer by id
+router.get('/:customerId', authenticateCustomerJWT, async(req, res) => {
+    const { customerId } = req.params;
+
+    try {
+        // Find customer by ID
+        const customer = await Customer.findById(customerId).select('-password -refreshToken');
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found" });
+        }
+
+        res.status(200).json({ customer });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
 // Register customer path
 router.post("/register", async(req, res) => {
     const { name, email, password } = req.body;

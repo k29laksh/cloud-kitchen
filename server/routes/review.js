@@ -5,6 +5,27 @@ const FoodItem = require('../models/FoodItem');
 const { authenticateCustomerJWT } = require('../middleware.js');
 const Customer = require('../models/Customer.js');
 
+// Get reviews of a food item using its ID
+router.get('/:foodItemId', async(req, res) => {
+    const { foodItemId } = req.params;
+
+    try {
+        // Find the food item by ID and populate the reviews
+        const foodItem = await FoodItem.findById(foodItemId).populate({
+            path: 'reviews',
+            populate: { path: 'customer', select: 'name' } // Optionally populate the customer's name
+        });
+
+        if (!foodItem) return res.status(404).json({ error: 'Food item not found' });
+
+        res.status(200).json({ reviews: foodItem.reviews });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
 // Add a review to a food item and link it to the customer
 router.post('/:foodItemId', authenticateCustomerJWT, async(req, res) => {
     const { foodItemId } = req.params;
@@ -29,7 +50,10 @@ router.post('/:foodItemId', authenticateCustomerJWT, async(req, res) => {
         // Add review reference to the customer's reviews array
         await Customer.findByIdAndUpdate(customerId, { $push: { reviews: review._id } });
 
-        res.status(201).json({ message: 'Review added successfully', review });
+        // Populate the customer field in the saved review
+        const populatedReview = await Review.findById(review._id).populate('customer', '-password'); // Exclude sensitive info like password
+
+        res.status(201).json({ message: 'Review added successfully', review: populatedReview });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });

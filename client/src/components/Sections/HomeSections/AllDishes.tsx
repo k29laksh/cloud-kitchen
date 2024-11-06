@@ -47,12 +47,12 @@ const AllDishes: React.FC = () => {
   return (
     <div className="flex gap-6 flex-wrap py-4 md:pb-8  flex-col">
      
-      <div className='flex justify-center sm:flex-wrap sm:justify-start sm:gap-6'>
+      <div className='flex  flex-col justify-center items-center sm:flex-row sm:flex-wrap sm:justify-start sm:gap-6'>
       {dishes?.map((dish) => (
-        <div key={dish.name} className="w-[200px] md:w-[250px] ">
+        <div key={dish.name} className="w-[ md:w-[250px] ">
           <Link href={`/recipe/${dish?._id}`}>
           <div
-            className="w-[200px] md:w-[250px] aspect-square bg-center bg-no-repeat bg-cover rounded-xl"
+            className="w-[250px] aspect-square bg-center bg-no-repeat bg-cover rounded-xl"
             style={{
               backgroundImage: `url(${dish.images[0] ? `http://localhost:5000${dish.images[0]}` : "/placeholder_image.png"})`, // Use a placeholder if no image
             }}
@@ -76,7 +76,7 @@ const AllDishes: React.FC = () => {
                   width={16}
                   height={16}
                 />
-              )}
+              )}200px]
               <p
                 className="text-gray-800 font-medium leading-normal text-xs sm:text-sm"
                 style={{

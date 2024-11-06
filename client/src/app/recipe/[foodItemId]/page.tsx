@@ -1,7 +1,6 @@
-"use client"
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Audio } from 'react-loader-spinner'
-
 import { useRouter, useParams } from "next/navigation";
 import {
   Clock,
@@ -24,7 +23,6 @@ import {
 } from "@/components/ui/tooltip";
 import Image from "next/image";
 import RatingSection from "@/components/Sections/Recipe/RatingSection";
-import Recommanded_dish1 from "@/components/Sections/Recipe/Recommanded_dish1";
 import Link from "next/link";
 import { useGetSingleDishQuery } from "@/redux/Service/dish";
 import AllDishes from "@/components/Sections/HomeSections/AllDishes";
@@ -32,28 +30,65 @@ import AllDishes from "@/components/Sections/HomeSections/AllDishes";
 const RecipePage = () => {
   const router = useRouter();
   const { foodItemId } = useParams();
-  console.log(foodItemId)
   const { data, isLoading, error } = useGetSingleDishQuery(foodItemId as string);
-  const recipe= data?.foodItem;
-  console.log(recipe)
+  const [isAdding, setIsAdding] = useState(false);
+  const recipe = data?.foodItem;
 
   if (isLoading) {
     return <div className="h-screen flex justify-center items-center">
         <Audio
-  height="80"
-  width="80"
-  radius="9"
-  color="orange"
-  ariaLabel="loading"
-  wrapperStyle
-  wrapperClass
-/>
+          height="80"
+          width="80"
+          radius="9"
+          color="orange"
+          ariaLabel="loading"
+          wrapperStyle
+          wrapperClass
+        />
     </div>;
   }
 
   if (error) {
     return <div>Error loading dishes.</div>;
   }
+
+  // Handle add to cart action
+  const handleAddToCart = () => {
+    setIsAdding(true);
+    try {
+      // Get existing cart items from localStorage
+      const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
+      
+      // Check if item already exists in cart
+      const existingItemIndex = existingCart.findIndex(
+        (item: any) => item._id === recipe._id
+      );
+
+      if (existingItemIndex > -1) {
+        // If item exists, increase quantity
+        existingCart[existingItemIndex].quantity += 1;
+      } else {
+        // If item doesn't exist, add new item
+        existingCart.push({
+          _id: recipe._id,
+          name: recipe.name,
+          price: recipe.price,
+          quantity: 1,
+          image: recipe.images[0] ? `http://localhost:5000${recipe.images[0]}` : "/placeholder_image.png",
+          homemaker: recipe.homemaker
+        });
+      }
+
+      // Save updated cart back to localStorage
+      localStorage.setItem('cart', JSON.stringify(existingCart));
+      alert("Item added to cart!");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Failed to add item to cart");
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   return (
     <div className="py-4 md:py-8 px-4 sm:px-24 md:px-12 lg:px-32 xl:px-52">
@@ -68,18 +103,18 @@ const RecipePage = () => {
 
       <div className="flex flex-col md:flex-row justify-between gap-10">
         <div className="md:w-1/2">
-          <Card className="mb-4 w-full md:mb-0">
+          <Card className="mb-4 w-full  md:mb-0">
             <CardContent className="p-0 ">
               <Image
                 src={recipe.images[0] ? `http://localhost:5000${recipe.images[0]}` : "/placeholder_image.png"}
                 alt={recipe.name}
-                className="w-full h-full md:h-[400px] object-cover rounded-lg"
+                className="w-full h-full aspect-square md:h-[400px] object-cover rounded-lg"
                 width={500}
                 height={500}
               />
             </CardContent>
             <div className="hidden md:block">
-              <RatingSection />
+              <RatingSection foodItemId={recipe._id}/>
             </div>
           </Card>
         </div>
@@ -97,11 +132,13 @@ const RecipePage = () => {
                   <Clock className="w-4 h-4" /> {recipe.timeToDeliver} min
                 </div>
               </div>
-              <Button>Add to cart</Button>
+              <Button onClick={handleAddToCart} disabled={isAdding}>
+                {isAdding ? 'Adding...' : 'Add to Cart'}
+              </Button>
             </div>
 
             <div className="flex items-center justify-between mb-6">
-              <Link href={`/chef/${recipe.homemaker?._id || "chef"}`} className="flex items-center gap-2">
+              <Link href={`/chef/${recipe.homemaker || "chef"}`} className="flex items-center gap-2">
                 <Avatar>
                   <AvatarImage
                     className="object-cover"
@@ -111,7 +148,7 @@ const RecipePage = () => {
                     {recipe.author?.name[0]?.toUpperCase() || "A"}
                   </AvatarFallback>
                 </Avatar>
-                <span className="font-medium">@{recipe.author?.username}</span>
+                <span className="font-medium">@{recipe.author?.username || `chef`} </span>
               </Link>
               <div className="flex items-center gap-2">
                 <TooltipProvider>
@@ -148,7 +185,6 @@ const RecipePage = () => {
             </div>
 
             <Separator className="my-4" />
-
             <div className="mb-6">
               <h2 className="font-semibold mb-2">Description:</h2>
               <p className="text-gray-600">{recipe.description}</p>
@@ -157,12 +193,6 @@ const RecipePage = () => {
               </Button>
             </div>
 
-            <Card className="mb-6">
-              <CardContent className="p-4 flex flex-wrap justify-between gap-4">
-                {/* Add nutrient details if available */}
-              </CardContent>
-            </Card>
-
             <h2 className="font-semibold mb-4">Ingredients:</h2>
             <div className="flex flex-wrap gap-2">
               {recipe.ingredients.map((ingredient, index) => (
@@ -170,9 +200,7 @@ const RecipePage = () => {
                   <Tooltip>
                     <TooltipTrigger>
                       <div className="flex flex-col items-center text-center">
-                        
                         <Badge variant="secondary" className="flex items-center gap-1">
-
                           {ingredient}
                         </Badge>
                       </div>
@@ -185,7 +213,7 @@ const RecipePage = () => {
 
             <Separator className="my-4" />
             <div className="md:hidden ">
-              <RatingSection />
+              <RatingSection foodItemId={recipe?._id}/>
             </div>
             
           </CardContent>

@@ -45,7 +45,7 @@ const Recommanded_dish1: React.FC = () => {
   }
 
   return (
-    <div className="h-screen flex gap-6 flex-wrap py-4 md:pb-8 px-4 sm:px-24 md:px-12 lg:px-32 xl:px-52 flex-col">
+    <div className="min-h-screen flex flex-col gap-6 py-4 md:pb-8 px-4 sm:px-24 md:px-12 lg:px-32 xl:px-52 ">
      <div>
      <Button
         variant="ghost"
@@ -58,7 +58,7 @@ const Recommanded_dish1: React.FC = () => {
      </div>
       <div className='flex justify-center sm:flex-wrap sm:justify-start sm:gap-6'>
       {dishes?.map((dish) => (
-        <div key={dish.name} className="w-[200px] md:w-[250px] mb-6">
+        <div key={dish.name} className="w-[200px] md:w-[250px] ">
           <div
             className="w-[200px] md:w-[250px] aspect-square bg-center bg-no-repeat bg-cover rounded-xl"
             style={{

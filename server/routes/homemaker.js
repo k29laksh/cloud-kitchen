@@ -213,4 +213,40 @@ router.get('/foodItemReviews', authenticateHomemakerJWT, async(req, res) => {
     }
 });
 
+// Route to get homemaker by ID, including all details of each food item
+router.get('/:id', async(req, res) => {
+    const homemakerId = req.params.id;
+
+    try {
+        // Find the homemaker by ID and populate all fields in the food items
+        const homemaker = await Homemaker.findById(homemakerId)
+            .populate('foodItems'); // Populate all fields of each food item
+
+        if (!homemaker) {
+            return res.status(404).json({ error: "Homemaker not found" });
+        }
+
+        // Respond with homemaker details and complete food items
+        res.status(200).json({
+            homemaker: {
+                id: homemaker._id,
+                name: homemaker.name,
+                email: homemaker.email,
+                kitchenName: homemaker.kitchenName,
+                city: homemaker.city,
+                state: homemaker.state,
+                pin: homemaker.pin,
+                phone: homemaker.phone,
+                veg: homemaker.veg,
+                kitchenImage: homemaker.kitchenImage,
+                foodItems: homemaker.foodItems // Contains all details of each food item
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+
 module.exports = router;

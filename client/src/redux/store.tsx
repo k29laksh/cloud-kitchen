@@ -2,7 +2,7 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { postApi } from './Service/cart';
+import { cartApi } from './Service/cart';
 import { reviewApi } from './Service/review';
 import { authApi } from './Service/auth';
 import authReducer from './features/authFeature';
@@ -12,8 +12,8 @@ import { dishApi } from './Service/dish';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    [postApi.reducerPath]: postApi.reducer,
     [dishApi.reducerPath]: dishApi.reducer,
+    [cartApi.reducerPath]: cartApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [reviewApi.reducerPath]: reviewApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
@@ -22,7 +22,7 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       authApi.middleware,
       dishApi.middleware,
-      postApi.middleware,
+      cartApi.middleware,
       reviewApi.middleware,
       profileApi.middleware,
     ),

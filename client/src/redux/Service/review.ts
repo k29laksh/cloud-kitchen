@@ -1,56 +1,67 @@
-"use client";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { RootState } from '../store';
 
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../store";
+interface Review {
+  id: number;
+  user: {
+    name: string;
+    username: string;
+    avatar?: string;
+  };
+  rating: number;
+  date: string;
+  comment: string;
+  likes: number;
+  images?: string[];
+}
+
+interface AddReviewData {
+  foodItemId: string;
+  rating: number;
+  comment: string;
+  foodImage?: string;
+}
 
 const baseQueryWithAuth = fetchBaseQuery({
-  baseUrl: "http://localhost:8000/api/v1/food/review",
+  baseUrl: 'http://localhost:5000',
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.userInfo?.access;
+    const token = (getState() as RootState).auth.userInfo?.token;
     if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
-      console.log(token);
+      headers.set('Authorization', `Bearer ${token}`);
     }
     return headers;
   },
 });
 
 export const reviewApi = createApi({
-  reducerPath: "reviewApi",
-
+  reducerPath: 'reviewApi',
   baseQuery: baseQueryWithAuth,
-  tagTypes: ["review"],
-
+  tagTypes: ['Review'],
   endpoints: (builder) => ({
-    // view all reviews
-    getAllreviews: builder.query({
-      query: (id) => `/reviews/${id}`,
-
-      providesTags: [{ type: "review", id: "LIST" }],
+    getReviews: builder.query<Review[], string>({
+      query: (foodItemId) => `/review/${foodItemId}`,
+      providesTags: (result) =>
+        Array.isArray(result)
+          ? result.map(({ id }) => ({ type: 'Review', id }))
+          : [], // Return an empty array or handle cases where result is not an array
     }),
-
-    // create review
-    createreview: builder.mutation({
-      query: ({ id, content }) => ({
-        url: `/reviews/${id}`,
-        method: "POST",
-        body: content,
+    
+    addReview: builder.mutation<void, AddReviewData>({
+      query: ({ foodItemId, ...data }) => ({
+        url: `/review/${foodItemId}`,
+        method: 'POST',
+        body: data,
       }),
-      invalidatesTags: [{ type: "review", id: "LIST" }],
+      invalidatesTags: [{ type: 'Review', id: 'LIST' }],
     }),
-
-    deletereview: builder.mutation({
-      query: (id) => ({
-        url: `/reviews/${id}`,
-        method: "DELETE",
+    deleteReview: builder.mutation<void, string>({
+      query: (reviewId) => ({
+        url: `/reviews/${reviewId}`,
+        method: 'DELETE',
       }),
-      invalidatesTags: [{ type: "review", id: "LIST" }],
+      invalidatesTags: [{ type: 'Review', id: 'LIST' }],
     }),
   }),
 });
 
-export const {
-  useGetAllreviewsQuery,
-  useCreatereviewMutation,
-  useDeletereviewMutation,
-} = reviewApi;
+export const { useGetReviewsQuery, useAddReviewMutation, useDeleteReviewMutation } = reviewApi;

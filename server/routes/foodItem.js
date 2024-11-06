@@ -23,14 +23,14 @@ const saveBase64Image = (base64Data, fileName) => {
 };
 
 // Create a new food item
-router.post('/', authenticateHomemakerJWT, async (req, res) => {
+router.post('/', authenticateHomemakerJWT, async(req, res) => {
     const { name, description, ingredients, timeToDeliver, veg, price, foodImages } = req.body;
     const homemakerId = req.homemakerId;
 
     try {
         // Process and save each base64 image
         const images = foodImages.map((image, index) => {
-            const fileName = `food_${Date.now()}_${index}.png`;  // Customize filename as needed
+            const fileName = `food_${Date.now()}_${index}.png`; // Customize filename as needed
             return saveBase64Image(image.fileContent, fileName);
         }).filter(filePath => filePath !== null); // Filter out any nulls from failed saves
 
@@ -121,20 +121,20 @@ router.delete('/:foodItemId', authenticateHomemakerJWT, async(req, res) => {
 });
 
 // Get all food items created by the homemaker
-// Get all food items created by the homemaker
-router.get('/getAll', async (req, res) => {
+router.get('/getAll', async(req, res) => {
     try {
-      const foodItems = await FoodItem.find({});
-      if (!foodItems || foodItems.length === 0) {
-        return res.status(404).json({ error: 'No food items found' });
-      }
-      res.status(200).json(foodItems);
+        const foodItems = await FoodItem.find({});
+        if (!foodItems || foodItems.length === 0) {
+            return res.status(404).json({ error: 'No food items found' });
+        }
+        res.status(200).json(foodItems);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Server error' });
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
     }
 });
- 
+
+
 router.get('/', authenticateHomemakerJWT, async(req, res) => {
     const homemakerId = req.homemakerId;
 
@@ -159,11 +159,11 @@ router.get('/reviews', authenticateHomemakerJWT, async(req, res) => {
     const homemakerId = req.homemakerId;
 
     try {
-        // Use the homemaker's ID to find food items and populate the reviews
+        // Use the homemaker's ID to find food items and populate the full reviews
         const foodItems = await FoodItem.find({ homemaker: homemakerId })
             .populate({
                 path: 'reviews',
-                populate: { path: 'customer', select: 'name' } // Populate customer details if needed
+                populate: { path: 'customer' } // Populate all customer fields
             });
 
         // Extract all reviews across food items

@@ -1,136 +1,75 @@
-"use client";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { RootState } from '../store';
 
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../store";
+// Define types for cart items and cart
+export interface CartItem {
+  foodItem: string;
+  homemaker: string;
+  quantity: number;
+  price: number;
+}
+
+export interface Cart {
+  items: CartItem[];
+  totalPrice: number;
+}
 
 const baseQueryWithAuth = fetchBaseQuery({
-  baseUrl: "http://localhost:8000/api/v1/community",
+  baseUrl: 'http://localhost:5000/cart',  // Adjust URL if needed
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.userInfo?.access;
+    const token = (getState() as RootState).auth.userInfo?.token;
     if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
+      headers.set('Authorization', `Bearer ${token}`);
     }
     return headers;
   },
 });
 
-export const postApi = createApi({
-  reducerPath: "postApi",
+export const cartApi = createApi({
+  reducerPath: 'cartApi',
   baseQuery: baseQueryWithAuth,
-  tagTypes: ["Post"],
+  tagTypes: ['Cart'],
   endpoints: (builder) => ({
-    // get all posts
-    getAllPosts: builder.query({
-      query: () => `/allposts/`,
-      providesTags: [{ type: "Post", id: "LIST" }],
+    // Get cart contents
+    getCart: builder.query<Cart, void>({
+      query: () => '/',  // Base route to fetch cart data
+      providesTags: ['Cart'],
     }),
-    getSinglePost: builder.query({
-      query: (id) => `/allposts/${id}`,
-    }),
-    // create post
-    createPost: builder.mutation({
-      query: (newPost) => ({
-        url: `/allposts/`,
-        method: "POST",
-        body: newPost,
+
+    // Add item to cart
+    addToCart: builder.mutation<{ message: string; cart: Cart }, Partial<CartItem>>({
+      query: (item) => ({
+        url: '/add',  // Route to add item
+        method: 'POST',
+        body: item,
       }),
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
+      invalidatesTags: ['Cart'],
     }),
 
-    deletePost: builder.mutation({
-      query: (id) => ({
-        url: `/allposts/${id}`,
-        method: "DELETE",
+    // Update item quantity in cart
+    updateCartItem: builder.mutation<{ message: string; cart: Cart }, { foodItemId: string; quantity: number }>({
+      query: ({ foodItemId, quantity }) => ({
+        url: `/${foodItemId}`,  // Route to update item
+        method: 'PUT',
+        body: { quantity },
       }),
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
+      invalidatesTags: ['Cart'],
     }),
 
-    likePost: builder.mutation({
-      query: (id) => ({
-        url: `/likes/${id}`,
-        method: "POST",
+    // Remove item from cart
+    removeFromCart: builder.mutation<{ message: string; cart: Cart }, string>({
+      query: (foodItemId) => ({
+        url: `/${foodItemId}`,  // Route to remove item
+        method: 'DELETE',
       }),
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          postApi.util.updateQueryData(
-            "getAllPosts",
-            undefined,
-            (draftPosts) => {
-              const postToUpdate = draftPosts.find(
-                (post: any) => post.id === id
-              );
-              if (postToUpdate) {
-                postToUpdate.Liked = true;
-                postToUpdate.likes += 1;
-              }
-            }
-          )
-        );
-
-        try {
-          await queryFulfilled;
-        } catch (error) {
-          patchResult.undo();
-        }
-      },
-    }),
-
-    dislikePost: builder.mutation({
-      query: (id) => ({
-        url: `/likes/${id}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
-    }),
-
-    savedPost: builder.mutation({
-      query: (id) => ({
-        url: `/bookmark/${id}`,
-        method: "POST",
-      }),
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          postApi.util.updateQueryData(
-            "getAllPosts",
-            undefined,
-            (draftPosts) => {
-              const postToUpdate = draftPosts.find(
-                (post: any) => post.id === id
-              );
-              if (postToUpdate) {
-                postToUpdate.bookmark = true;
-              }
-            }
-          )
-        );
-
-        try {
-          await queryFulfilled;
-        } catch (error) {
-          patchResult.undo();
-        }
-      },
-    }),
-
-    unSavedPost: builder.mutation({
-      query: (id) => ({
-        url: `/bookmark/${id}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
+      invalidatesTags: ['Cart'],
     }),
   }),
 });
 
 export const {
-  useGetAllPostsQuery,
-  useGetSinglePostQuery,
-  useCreatePostMutation,
-  useDeletePostMutation,
-  useLikePostMutation,
-  useDislikePostMutation,
-  useSavedPostMutation,
-  useUnSavedPostMutation,
-} = postApi;
+  useGetCartQuery,
+  useAddToCartMutation,
+  useUpdateCartItemMutation,
+  useRemoveFromCartMutation,
+} = cartApi;
